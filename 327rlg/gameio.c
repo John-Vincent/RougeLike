@@ -1,10 +1,3 @@
-#include <endian.h>
-#include <stdlib.h>
-#include <errno.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <string.h>
-#include "map.h"
 #include "gameio.h"
 
 /**

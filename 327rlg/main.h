@@ -1,7 +1,22 @@
 #ifndef RLG327
 #define RLG327
 
+#include <stdio.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <time.h>
+#include <string.h>
+#include "map.h"
+#include "gameio.h"
+
 typedef enum{ GENERATE, SAVE, LOAD, LOAD_SAVE} game_mode_t;
+
+typedef struct dungeon{
+  uint8_t hardness[mapHeight][mapWidth];
+  char chars[mapHeight][mapWidth];
+  room_t *rooms;
+  int numRooms;
+} dungeon_t;
 
 /**
  * initalizes the random number generator base on user input, this is basically just to keep main clean.

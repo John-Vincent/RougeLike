@@ -1,6 +1,14 @@
 #ifndef GAMEIO_H
 #define GAMEIO_H
 
+#include <endian.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <string.h>
+#include "map.h"
+
 /**
  * saves the current game map with the following rules
  * byte range         data contents

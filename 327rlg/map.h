@@ -1,7 +1,19 @@
 #ifndef MAP_H
 #define MAP_H
+
+#include <stdint.h>
+#include <stdlib.h>
+#include <stdio.h>
+
 #define mapWidth 160
 #define mapHeight 105
+#define Min_Room_Width 7
+#define Min_Room_Height 5
+#define Min_Room_Number 10
+#define Room_Width_Range 20
+#define Room_Height_Range 15
+#define Room_Number_Range 6
+
 
 typedef struct room {
   uint8_t xPos;

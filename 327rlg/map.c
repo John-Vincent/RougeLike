@@ -1,6 +1,3 @@
-#include <stdlib.h>
-#include <stdint.h>
-#include <stdio.h>
 #include "map.h"
 
 int generateRooms(room_t *rooms, int numRooms){
@@ -8,18 +5,14 @@ int generateRooms(room_t *rooms, int numRooms){
 
   printf("------Rooms------\nXpos, Ypos, Width, Height\n");
   for(i = 0; i<numRooms; i++){
-    rooms[i].width = rand() % 20 + 7;
-    rooms[i].height = rand() % 15 + 5;
+    rooms[i].width = rand() % Room_Width_Range + Room_Min_Width;
+    rooms[i].height = rand() % Room_Height_Range + Room_Max_Height;
 
     //while the room has not been place try to place the room
     while(d){
       //x and y position to test
-      rooms[i].xPos = rand() % 151 + 1;
-      rooms[i].yPos = rand() % 98 + 1;
-      while(rooms[i].xPos + rooms[i].width > 158 || rooms[i].yPos + rooms[i].height > 103){
-        rooms[i].xPos = rand() % 151 + 1;
-        rooms[i].yPos = rand() % 98 + 1;
-      }
+      rooms[i].xPos = rand() % (mapWidth - rooms[i].width - 2) + 1;
+      rooms[i].yPos = rand() % (mapHeight - rooms[i].height - 2) + 1;
 
       //assume no collisions will happen
       d = 0;
@@ -122,7 +115,7 @@ void generateHardness(uint8_t map[][mapWidth]){
 }
 
 
-void init_map_char(char map_char[mapHeight][mapWidth]){
+void init_map_char(char map_#define Min_Room_Number 10char[mapHeight][mapWidth]){
   int i, j;
 
   for(j = 0; j < mapHeight; j++){
@@ -152,7 +145,7 @@ int generateMap(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][
   generateHardness(map_hard);
 
   //generates all the rooms
-  *room_count = rand()%6 + 10;
+  *room_count = rand()% Room_Number_Range + Min_Room_Number;
   int numRooms = *room_count;
   if(!(*rooms = malloc((sizeof (**rooms)) * numRooms))){
       return -1;

@@ -1,10 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
-#include <time.h>
-#include <string.h>
-#include "map.h"
-#include "gameio.h"
 #include "main.h"
 
 
@@ -18,37 +11,30 @@ int main(int argc, char const *argv[]) {
   //initalize random number generator and map matrix
   initRandom(seed);
 
-  //array of map hardness
-  uint8_t map_hard[mapHeight][mapWidth];
-  //array of characters for map
-  char map_char[mapHeight][mapWidth];
-  //array of rooms
-  room_t *rooms;
-  //number of rooms
-  int room_count;
+  dungeon_t dungeon;
 
   if(mode == GENERATE){
 
-    if(generateMap(map_hard, map_char, &rooms, &room_count)){
+    if(generateMap(dungeon.hardness, dungeon.chars, &dungeon.rooms, &dungeon.numRooms)){
       printf("failed to generate Map\n");
       return -1;
     }
 
   } else if(mode == SAVE){
 
-    if(save(map_hard, map_char, rooms, room_count)){
+    if(save(dungeon.hardness, dungeon.chars, dungeon.rooms, dungeon.numRooms)){
       return -1;
     }
 
   } else if(mode == LOAD){
 
-    if(load(map_hard, map_char, &rooms, &room_count)){
+    if(load(dungeon.hardness, dungeon.chars, &dungeon.rooms, &dungeon.numRooms)){
       return -1;
     }
 
   } else if(mode == LOAD_SAVE){
 
-    if(load_save(map_hard, map_char, &rooms, &room_count)){
+    if(load_save(dungeon.hardness, dungeon.chars, &dungeon.rooms, &dungeon.numRooms)){
       return -1;
     }
 

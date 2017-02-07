@@ -1,9 +1,9 @@
 ------------------------------------ASSIGNMENT 1.01------------------------------------------------------------------------------------
-January 24, 10:00pm - 1:30am
+January 24, 10:00pm - 1:30am :
   made Makefile main.c room.c and dungeonRoom.h files
     main.c
-      - added generatehardness function: complete
-      - added initRandom function: complete
+      - added generatehardness function - complete
+      - added initRandom function - complete
       - added main function up to gnereateRooms function call
 
     dungeonRoom.h
@@ -13,12 +13,12 @@ January 24, 10:00pm - 1:30am
     room.h
       - started generateRooms function
 
-January 25, 1:00pm - 2:30pm
+January 25, 1:00pm - 2:30pm :
   finish typing generateRooms - have yet to test
     room.h
       - finished generateRooms function in thoery
 
-January 25, 3:00pm-11:00pm
+January 25, 3:00pm-11:00pm :
   - made function to print to screen - printGrid(char[][])
   - made second array to hold a character representation of the game board for easy printing - first array only held hardness
       and i just descovered that paths and rooms have the same hardness so it was going to be difficult to print.
@@ -33,11 +33,11 @@ January 25, 3:00pm-11:00pm
       adding a assignment to the first case outside the loop fixed the problem
 -------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------ASSIGNMENT 1.02-----------------------------------------------------------------------
-January 31, 10:00pm-10:30pm
+January 31, 10:00pm-10:30pm :
   -made load.c, gameio.h, and save.c files as well as .rlg327 directory
   -updated Makefile to compile these new classes.
 
-February 1, 16:32-23:47
+February 1, 16:32-23:47 :
   -reorganized things to clean up main file.
   -made the generateRooms function which has most of the logic the the main
     function had in 1.01, this allows me to control when to generateRooms
@@ -58,3 +58,16 @@ February 1, 16:32-23:47
   -changed the main function to make the necessary function calls for each mode
   -added save load and load_save functions to main.c to clean up the look of main.c
   -added new line to file string on accident so i removed that
+--------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------ASSIGNMENT 1.03-----------------------------------------------------------------------
+February 3, 16:20-xx:xx :
+  -added dungeon struct to help keep track of the data in main.
+  -pulled includes into the header files for organization.
+  -added path_finder.c which is going to hold the code to implement dijkstras algorithm
+  -added heap file to to make my own heap implementation.
+  -finished heap but needed to do level order traversal so i made que file to
+      add my own que implementation
+  -finished que, had lots of bugs where i wasnt initalizing things properly so
+    it would have a bunch of garbage in the pointer memory locations. This resulted
+    in me hunting down segmentaiton falts for an hour or so, but now i can get back
+    to testing my heap.
