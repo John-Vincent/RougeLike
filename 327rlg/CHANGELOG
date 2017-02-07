@@ -1,0 +1,32 @@
+January 24, 10:00pm - 1:30am
+  made Makefile main.c room.c and dungeonRoom.h files
+    main.c
+      - added generatehardness function: complete
+      - added initRandom function: complete
+      - added main function up to gnereateRooms function call
+
+    dungeonRoom.h
+      - added Room struct and defined type as Room_t
+      - added generateRooms function prototype
+
+    room.h
+      - started generateRooms function
+
+January 25, 1:00pm - 2:30pm
+  finish typing generateRooms - have yet to test
+    room.h
+      - finished generateRooms function in thoery
+
+January 25, 3:00pm-11:00pm
+  - made function to print to screen - printGrid(char[][])
+  - made second array to hold a character representation of the game board for easy printing - first array only held hardness
+      and i just descovered that paths and rooms have the same hardness so it was going to be difficult to print.
+  - found a whole lot of bugs in my generateRooms function
+      - bug that prevented me from entering second loop
+      - bug that resulted in rooms being placed too close to each other(error in my equation)
+      - bug that allowed first room to be placed out of bounds(checked bounds with room collision and the first room never
+          enters that loop)
+  -added connect_rooms function
+    -found bug in connect_rooms: the paths are print with gaps in them when the slope is very high
+    -found bug that from my fix to the last bug, it wouldn't print in a horazontal line because it wouldn't enter the new loop i made
+      adding a assignment to the first case outside the loop fixed the problem
