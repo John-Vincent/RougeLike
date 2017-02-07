@@ -1,126 +1,149 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <time.h>
-#include "room.h"
+#include <string.h>
+#include "map.h"
+#include "gameio.h"
+#include "main.h"
 
 
-/**
- * generates a random rock hardness value for each position in the map.
- * @param  map                  the matrix representing the game area
- * @author Collin Vincent <collinvincent96@gmail.com>
- * @date   2017-01-24T22:46:08+000
- */
-void generateHardness(int map[mapHeight][mapWidth]);
-
-/**
- * initalizes the random number generator base on user input, this is basically just to keep main clean.
- * @param  argc                    argument count from command line
- * @param  argv                    command line arguments
- * @author Collin Vincent <collinvincent96@gmail.com>
- * @date   2017-01-24T23:04:05+000
- */
-void initRandom(int argc, char const *argv[]);
-
-/**
- * prints the map to the stdout
- * @param  map                     matrix representing objects in the map
- * @author Collin Vincent <collinvincent96@gmail.com>
- * @date   2017-01-25T16:44:49+000
- */
-void printGrid(char map[mapHeight][mapWidth]);
-
-/**
- * sets all the characters to a space
- * @param  map_char                  the map in character form
- * @author Collin Vincent <collinvincent96@gmail.com>
- * @date   2017-01-25T18:28:25+000
- */
-void init_map_char(char map_char[mapHeight][mapWidth]);
 
 
 int main(int argc, char const *argv[]) {
 
+  int *seed = NULL;
+  //reads the args sets the mode and gives the
+  game_mode_t mode = readArgs(argc, argv, &seed);
   //initalize random number generator and map matrix
-  initRandom(argc, argv);
+  initRandom(seed);
 
   //array of map hardness
-  int map_hard[mapHeight][mapWidth];
+  uint8_t map_hard[mapHeight][mapWidth];
   //array of characters for map
   char map_char[mapHeight][mapWidth];
   //array of rooms
   room_t *rooms;
+  //number of rooms
+  int room_count;
 
-  init_map_char(map_char);
+  if(mode == GENERATE){
 
-  //assigns hardness value to all areas in the map
-  generateHardness(map_hard);
+    if(generateMap(map_hard, map_char, &rooms, &room_count)){
+      printf("failed to generate Map\n");
+      return -1;
+    }
 
-  //generates all the rooms
-  int numRooms = rand()%6 + 10;
-  if(!(rooms = malloc((sizeof (*rooms)) * numRooms))){
-      return 1;
+  } else if(mode == SAVE){
+
+    if(save(map_hard, map_char, rooms, room_count)){
+      return -1;
+    }
+
+  } else if(mode == LOAD){
+
+    if(load(map_hard, map_char, &rooms, &room_count)){
+      return -1;
+    }
+
+  } else if(mode == LOAD_SAVE){
+
+    if(load_save(map_hard, map_char, &rooms, &room_count)){
+      return -1;
+    }
+
   }
-  if(generateRooms(rooms, numRooms)){
-    printf("could not generate Rooms");
-    return 1;
-  }
-  //set the hardness of map array to 0 to create paths between rooms
-  connect_rooms(map_hard, rooms, numRooms);
-  drawMap(map_hard, map_char, rooms, numRooms);
-
-  printGrid(map_char);
 
 
   return 0;
 }
 
-void initRandom(int argc, char const *argv[]){
+void initRandom(int const *seed){
   int t;
-  if(argc >= 2){
-    t = atoi(argv[1]);
-  }
-  else{
+  if(seed == NULL){
     t = time(NULL);
+  } else{
+    t = *seed;
   }
   printf("time seed: %d\n", t);
   srand(t);
 }
 
+game_mode_t readArgs(int argc, char const *argv[], int **seed){
+  int i, t;
+  game_mode_t mode = GENERATE;
 
-void generateHardness(int map[][mapWidth]){
-  int x, y;
-
-  for(y = 0; y < mapHeight; y++){
-    for(x = 0; x < mapWidth; x++){
-      if(x==0 && y==0 && x==mapWidth-1 && y==mapHeight){
-        map[y][x] = 255;
+  for(i = 1; i < argc; i++){
+    if(strcmp(argv[i], "-t")==0){
+      i++;
+      t = atoi(argv[i]);
+      *seed = &t;
+    } else if(strcmp(argv[i], "--save") == 0){
+      if(mode == LOAD){
+        mode = LOAD_SAVE;
+      } else {
+        mode = SAVE;
       }
-      else{
-        map[y][x] = rand() % 253 + 1;
+    } else if(strcmp(argv[i], "--load") == 0){
+      if(mode == SAVE){
+        mode = LOAD_SAVE;
+      } else {
+        mode = LOAD;
       }
     }
   }
+
+  return mode;
 }
 
-void init_map_char(char map_char[mapHeight][mapWidth]){
-  int i, j;
+int save(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][mapWidth], room_t *rooms, int room_count){
 
-  for(j = 0; j < mapHeight; j++){
-    for(i = 0; i < mapWidth; i++){
-      map_char[j][i] = ' ';
-    }
+  if(generateMap(map_hard, map_char, &rooms, &room_count)){
+    printf("failed to generate Map\n");
+    return -1;
   }
+
+  if(saveMap(room_count, rooms, map_hard)){
+    printf("failed to save map\n");
+    return -1;
+  }
+
+  printf("map saved\n");
+
+  return 0;
 }
 
 
-void printGrid(char map[mapHeight][mapWidth]){
-  int j, i;
+int load(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][mapWidth], room_t **rooms, int *room_count){
 
-  for(j = 0; j < mapHeight; j++){
-    for(i = 0; i < mapWidth; i++){
-      printf("%c", map[j][i]);
-    }
-    printf("%d\n", j);
+  if(loadMap(rooms, room_count,  map_hard)){
+    return -1;
   }
 
+  init_map_char(map_char);
+  drawMap(map_hard, map_char, *rooms, *room_count);
+  printMap(map_char);
+
+  return 0;
+}
+
+
+int load_save(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][mapWidth], room_t **rooms, int *room_count){
+
+  if(loadMap(rooms, room_count,  map_hard)){
+    return -1;
+  }
+
+  init_map_char(map_char);
+  drawMap(map_hard, map_char, *rooms, *room_count);
+  printMap(map_char);
+
+  if(saveMap(*room_count, *rooms, map_hard)){
+    printf("failed to save map\n");
+    return -1;
+  }
+
+  printf("map saved\n");
+
+  return 0;
 }

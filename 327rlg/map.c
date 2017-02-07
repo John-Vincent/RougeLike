@@ -1,11 +1,12 @@
-#include "room.h"
 #include <stdlib.h>
+#include <stdint.h>
 #include <stdio.h>
+#include "map.h"
 
 int generateRooms(room_t *rooms, int numRooms){
   int i, j, d = 1, distx, disty, c;
 
-
+  printf("------Rooms------\nXpos, Ypos, Width, Height\n");
   for(i = 0; i<numRooms; i++){
     rooms[i].width = rand() % 20 + 7;
     rooms[i].height = rand() % 15 + 5;
@@ -40,22 +41,23 @@ int generateRooms(room_t *rooms, int numRooms){
       }
       c++;
       if(c>1000){
-        return 1;
+        return -1;
       }
     }
     d = 1;
     printf("%d, %d, %d, %d\n", rooms[i].xPos, rooms[i].yPos, rooms[i].width, rooms[i].height);
   }
+  printf("-----------------");
   return 0;
 }
 
 
-void drawMap(int map[mapHeight][mapWidth], char map_c[mapHeight][mapWidth], room_t *rooms, int numRooms){
+void drawMap(uint8_t map[mapHeight][mapWidth], char map_c[mapHeight][mapWidth], room_t *rooms, int numRooms){
   int i, j, r;
 
   for(i = 0; i < mapHeight; i++){
     for(j = 0; j < mapWidth; j++){
-      if(map[i][j] == 0)
+      if(map[i][j] == 0x00)
         map_c[i][j] = '#';
     }
   }
@@ -64,14 +66,14 @@ void drawMap(int map[mapHeight][mapWidth], char map_c[mapHeight][mapWidth], room
 
     for(j = rooms[r].yPos; j <= rooms[r].yPos + rooms[r].height; j++){
       for(i = rooms[r].xPos; i <= rooms[r].xPos + rooms[r].width; i++){
-        map[j][i] = 0;
+        map[j][i] = 0x00;
         map_c[j][i] = '.';
       }
     }
   }
 }
 
-void connect_rooms(int map[mapHeight][mapWidth], room_t *rooms, int numRooms){
+void connect_rooms(uint8_t map[mapHeight][mapWidth], room_t *rooms, int numRooms){
   int r, p1x, p1y, p2x, p2y, i, j, s, sy, ny1, ny2;
   float m;
 
@@ -89,18 +91,79 @@ void connect_rooms(int map[mapHeight][mapWidth], room_t *rooms, int numRooms){
     while(i != p2x){
       ny1 = (int)(m*(i-p1x)+p1y);
       ny2 = (int)(m*(i-p1x+s)+p1y);
-      map[ny1][i] = 0;
+      map[ny1][i] = 0x00;
       sy = 1;
       if(ny1>ny2){
         sy = -1;
       }
       j = ny1;
       while(j!=ny2+sy){
-        map[j][i] = 0;
+        map[j][i] = 0x00;
         j+=sy;
       }
       i+=s;
     }
   }
+}
 
+void generateHardness(uint8_t map[][mapWidth]){
+  int x, y;
+
+  for(y = 0; y < mapHeight; y++){
+    for(x = 0; x < mapWidth; x++){
+      if(x==0 && y==0 && x==mapWidth-1 && y==mapHeight){
+        map[y][x] = 0xFF;
+      }
+      else{
+        map[y][x] = (uint8_t)(rand() % 253 + 1);
+      }
+    }
+  }
+}
+
+
+void init_map_char(char map_char[mapHeight][mapWidth]){
+  int i, j;
+
+  for(j = 0; j < mapHeight; j++){
+    for(i = 0; i < mapWidth; i++){
+      map_char[j][i] = ' ';
+    }
+  }
+}
+
+
+void printMap(char map[mapHeight][mapWidth]){
+  int j, i;
+
+  for(j = 0; j < mapHeight; j++){
+    for(i = 0; i < mapWidth; i++){
+      printf("%c", map[j][i]);
+    }
+    printf("\n");
+  }
+}
+
+
+int generateMap(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][mapWidth], room_t **rooms, int *room_count){
+  init_map_char(map_char);
+
+  //assigns hardness value to all areas in the map
+  generateHardness(map_hard);
+
+  //generates all the rooms
+  *room_count = rand()%6 + 10;
+  int numRooms = *room_count;
+  if(!(*rooms = malloc((sizeof (**rooms)) * numRooms))){
+      return -1;
+  }
+  if(generateRooms(*rooms, numRooms)){
+    printf("could not generate Rooms");
+    return -1;
+  }
+  //set the hardness of map array to 0 to create paths between rooms
+  connect_rooms(map_hard, *rooms, numRooms);
+  drawMap(map_hard, map_char, *rooms, numRooms);
+  printMap(map_char);
+  return 0;
 }

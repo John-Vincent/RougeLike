@@ -1,18 +1,7 @@
-I start by making a 2d int array to hold the hardness values of the map. Then I call generateHardness
-which filles each element on the perimeter with 255, and every other element with a random value
-from 1-254. I also make a 2d char array and fill it with spaces, this is really just to make
-printing the map to the console easier. I then generate 10 - 16 random rooms that are 7-27 by 5-20
-and store them in an array. I do this in a function called generateRooms which is located in file called room.c.
-I then connect each room in the array to the room next in the array with a straight line path. I also connected the
-last element to the first element that way the map creates a cycle graph. To connect the rooms all I do is change
-is calculate the equation for the line from the center of one room to the center of the next room then change the
-hardness for every element along this line segment to 0. Unlike the rooms I do not store the data for the paths in
-another array, they are represented souly through the hardness array. After the rooms are connected I draw the
-map with the drawMap function. to draw the map I loop through the hardness array and for every element with a value
-of 0 I place a # in the corrisponding location in the character array, this fills the rooms with #'s as well. Then
-I loop through the room array and for each room I loop through its with and hight and place a ''.' in the corrisponding
-location of the character array to replace the #'s.
-
-The result is a connected graph(not the data structure just the math concept) of at least 10 rooms in a 160x105 grid
-(although I use 3 more width to print row numbers to makethe rooms easier to locate) where the outermost cells are
-immutable, with no corridors extending into rooms.
+i added a new file for doing the file reading and writing, the functions
+write all the map data to a file as instructed. I only did big endian conversion
+on the file size value and the version number value because it seemed to me
+that everything else was 1 byte so it wouldnt need the conversion. I think
+the most important work i did during this assignment was reorganizing my code
+and changing the type of the hardness array to uint8_t. It should be easier to
+add code on top of the exising project going forward with this new organization.

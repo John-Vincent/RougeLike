@@ -1,3 +1,4 @@
+------------------------------------ASSIGNMENT 1.01------------------------------------------------------------------------------------
 January 24, 10:00pm - 1:30am
   made Makefile main.c room.c and dungeonRoom.h files
     main.c
@@ -30,3 +31,30 @@ January 25, 3:00pm-11:00pm
     -found bug in connect_rooms: the paths are print with gaps in them when the slope is very high
     -found bug that from my fix to the last bug, it wouldn't print in a horazontal line because it wouldn't enter the new loop i made
       adding a assignment to the first case outside the loop fixed the problem
+-------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------ASSIGNMENT 1.02-----------------------------------------------------------------------
+January 31, 10:00pm-10:30pm
+  -made load.c, gameio.h, and save.c files as well as .rlg327 directory
+  -updated Makefile to compile these new classes.
+
+February 1, 16:32-23:47
+  -reorganized things to clean up main file.
+  -made the generateRooms function which has most of the logic the the main
+    function had in 1.01, this allows me to control when to generateRooms
+    or when to do other operations in the new main method going forward.
+    -found bug i need to use a pointer to the room_t pointer so that i can
+      actually keep the array in the main function after generate Rooms runs
+  -made enum to tell what mode the program is in
+  -added function readArgs to interpret the command line arguments
+  -bug found with enum, the name mode_t was already taken by stdlib
+  -changed enum name to game_mode_t
+  -finished readArgs - no bugs
+  -added saveMap function which will create the save file
+  -changed my hardness array to an uint8_t instead of an int
+      to make reading and writing easier
+  -finished saveMap - no bugs :)
+  -changed main to use saveMap
+  -finished loadMap - i had a bug with the math for reading the rooms.
+  -changed the main function to make the necessary function calls for each mode
+  -added save load and load_save functions to main.c to clean up the look of main.c
+  -added new line to file string on accident so i removed that
