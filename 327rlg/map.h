@@ -12,7 +12,7 @@
 #define Room_Min_Number 10
 #define Room_Width_Range 20
 #define Room_Height_Range 15
-#define Room_Number_Range 6
+#define Room_Number_Range 10
 
 
 typedef struct room {

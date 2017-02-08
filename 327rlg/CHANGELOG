@@ -60,7 +60,7 @@ February 1, 16:32-23:47 :
   -added new line to file string on accident so i removed that
 --------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------ASSIGNMENT 1.03-----------------------------------------------------------------------
-February 3, 16:20-xx:xx :
+February 3, 16:20-20:00 :
   -added dungeon struct to help keep track of the data in main.
   -pulled includes into the header files for organization.
   -added path_finder.c which is going to hold the code to implement dijkstras algorithm
@@ -71,3 +71,9 @@ February 3, 16:20-xx:xx :
     it would have a bunch of garbage in the pointer memory locations. This resulted
     in me hunting down segmentaiton falts for an hour or so, but now i can get back
     to testing my heap.
+
+February 8, 9:00-12:09 :
+  -finished writing heap and testing, lots of bugs found too many to list
+  -finished writing path_finder which uses the heap to find the shortest path and then returns a path_t linked list with all the
+      data for which map location is in the path.
+  -finished tying my path_finder into the map file.

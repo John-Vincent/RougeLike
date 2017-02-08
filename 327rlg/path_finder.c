@@ -4,6 +4,8 @@ static int32_t cmp_vertex(void *a, void *b);
 
 static void initNodes(heap_t *h, vertex_t nodes[mapHeight-2][mapWidth-2], uint8_t hardness[mapHeight][mapWidth]);
 
+#define turn_bias 30
+
 path_t find_shortest_path(uint8_t hardness[mapHeight][mapWidth], uint8_t start_x, uint8_t start_y, uint8_t end_x, uint8_t end_y){
 
   vertex_t nodes[mapHeight-2][mapWidth-2];
@@ -27,7 +29,7 @@ path_t find_shortest_path(uint8_t hardness[mapHeight][mapWidth], uint8_t start_x
       break;
     }
     if(u->left){
-      alt = u->dist + 50 + u->left->hard;
+      alt = u->dist + turn_bias + u->left->hard;
       if(u->left->dist == -1 || alt < u->left->dist){
         u->left->dist = alt;
         h->update(h, u->left->heap);
@@ -35,7 +37,7 @@ path_t find_shortest_path(uint8_t hardness[mapHeight][mapWidth], uint8_t start_x
       }
     }
     if(u->right){
-      alt = u->dist + 50 + u->right->hard;
+      alt = u->dist + turn_bias + u->right->hard;
       if(u->right->dist == -1 || alt < u->right->dist){
         u->right->dist = alt;
         h->update(h, u->right->heap);
@@ -43,7 +45,7 @@ path_t find_shortest_path(uint8_t hardness[mapHeight][mapWidth], uint8_t start_x
       }
     }
     if(u->up){
-      alt = u->dist + 50 + u->up->hard;
+      alt = u->dist + turn_bias + u->up->hard;
       if(u->up->dist == -1 || alt < u->up->dist){
         u->up->dist = alt;
         h->update(h, u->up->heap);
@@ -51,7 +53,7 @@ path_t find_shortest_path(uint8_t hardness[mapHeight][mapWidth], uint8_t start_x
       }
     }
     if(u->down){
-      alt = u->dist + 50 + u->down->hard;
+      alt = u->dist + turn_bias + u->down->hard;
       if(u->down->dist == -1 || alt < u->down->dist){
         u->down->dist = alt;
         h->update(h, u->down->heap);
