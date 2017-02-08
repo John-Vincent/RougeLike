@@ -1,5 +1,5 @@
-#include "map.h"
-#include "path_finder.h"
+#include "../headers/map.h"
+#include "../headers/path_finder.h"
 
 int generateRooms(room_t *rooms, int numRooms){
   int i, j, d = 1, distx, disty, c;

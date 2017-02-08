@@ -1,4 +1,4 @@
-#include "gameio.h"
+#include "../headers/gameio.h"
 
 /**
  * returns a string with the path to the file

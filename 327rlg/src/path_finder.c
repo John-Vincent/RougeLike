@@ -1,4 +1,4 @@
-#include "path_finder.h"
+#include "../headers/path_finder.h"
 
 static int32_t cmp_vertex(void *a, void *b);
 

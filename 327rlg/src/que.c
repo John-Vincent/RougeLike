@@ -1,4 +1,4 @@
-#include "que.h"
+#include "../headers/que.h"
 
 //#define TESTING_QUE
 
