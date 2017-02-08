@@ -17,7 +17,7 @@ $(EXE): $(BINARIES)
 	@$(ECHO) compiling $(EXE)
 	@$(CC) -o $(EXE) $(CFLAGS) $(BINARIES)
 
-$(BIN)%: $(SRCS)%.c $(OBJS)%.h
+$(BIN)%.o: $(SRCS)%.c $(OBJS)%.h
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 .PHONY: clean create_bin default
