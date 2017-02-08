@@ -1,6 +1,6 @@
 #include "heap.h"
 
-#define TESTING_HEAP
+//#define TESTING_HEAP
 
 #define swap(p, c, t)({                 \
   (t) = (p)->children;                  \
@@ -42,9 +42,21 @@
   }                                     \
 })
 
-
+/**
+ * this method is used to place a new node in the closest vacant location to the top of the heap.
+ * @param  h                       the heap that will get the new node
+ * @param  n                       the node that needs to be placed
+ * @author Collin Vincent <collinvincent96@gmail.com>
+ * @date   2017-02-08T10:46:20+000
+ */
 static void place_node(heap_node_t *h, heap_node_t *n);
 
+/**
+ * this method makes recursive calls that will end up freeing all the dynamically allocated heap nodes in the heap
+ * @param  n                       a node that will free every child and then itself
+ * @author Collin Vincent <collinvincent96@gmail.com>
+ * @date   2017-02-08T10:48:01+000
+ */
 static void clear_node(heap_node_t *n);
 
 static void place_node(heap_node_t *h, heap_node_t *n){
@@ -74,7 +86,7 @@ static void clear_node(heap_node_t *n){
 static void update_node(heap_t *h, heap_node_t *n){
   uint32_t t;
   heap_node_t *p;
-  
+
   while(n->parent && h->compare(n->data, n->parent->data) > 0){
     p = n->parent;
     swap(p, n, t);
@@ -204,6 +216,7 @@ static int32_t cmp(void *n, void *p){
 
 int main(int argc, char const *argv[]){
   heap_t *h;
+  heap_node_t *n;
   init_heap(&h, cmp);
   int *t, c = 1;
   char s[20];
@@ -215,7 +228,7 @@ int main(int argc, char const *argv[]){
       t = malloc(sizeof (int));
       printf("enter number: ");
       scanf("%d", t);
-      h->insert(h, t);
+      n = h->insert(h, t);
       print_heap(h);
     } else if(!strcmp(s, "pop")){
       t = h->pop(h);
@@ -224,6 +237,12 @@ int main(int argc, char const *argv[]){
         print_heap(h);
         free(t);
       }
+    } else if(!strcmp(s,"update")){
+      printf("enter new number: ");
+      scanf("%d", t);
+      n->data = t;
+      h->update(h, n);
+      print_heap(h);
     } else if(!strcmp(s, "exit")){
       c = 0;
     }

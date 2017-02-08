@@ -1,6 +1,6 @@
 #include "que.h"
 
-#define TESTING_QUE
+//#define TESTING_QUE
 
 
 static void add(que_t *q, void *d){

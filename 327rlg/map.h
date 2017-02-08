@@ -7,9 +7,9 @@
 
 #define mapWidth 160
 #define mapHeight 105
-#define Min_Room_Width 7
-#define Min_Room_Height 5
-#define Min_Room_Number 10
+#define Room_Min_Width 7
+#define Room_Min_Height 5
+#define Room_Min_Number 10
 #define Room_Width_Range 20
 #define Room_Height_Range 15
 #define Room_Number_Range 6

@@ -1,12 +1,13 @@
 #include "map.h"
+#include "path_finder.h"
 
 int generateRooms(room_t *rooms, int numRooms){
   int i, j, d = 1, distx, disty, c;
 
-  printf("------Rooms------\nXpos, Ypos, Width, Height\n");
+  printf("----------Rooms----------\nXpos, Ypos, Width, Height\n");
   for(i = 0; i<numRooms; i++){
     rooms[i].width = rand() % Room_Width_Range + Room_Min_Width;
-    rooms[i].height = rand() % Room_Height_Range + Room_Max_Height;
+    rooms[i].height = rand() % Room_Height_Range + Room_Min_Height;
 
     //while the room has not been place try to place the room
     while(d){
@@ -38,9 +39,9 @@ int generateRooms(room_t *rooms, int numRooms){
       }
     }
     d = 1;
-    printf("%d, %d, %d, %d\n", rooms[i].xPos, rooms[i].yPos, rooms[i].width, rooms[i].height);
+    printf("%03d,  %03d,   %03d,  %03d\n", rooms[i].xPos, rooms[i].yPos, rooms[i].width, rooms[i].height);
   }
-  printf("-----------------");
+  printf("-------------------------");
   return 0;
 }
 
@@ -66,7 +67,7 @@ void drawMap(uint8_t map[mapHeight][mapWidth], char map_c[mapHeight][mapWidth], 
   }
 }
 
-void connect_rooms(uint8_t map[mapHeight][mapWidth], room_t *rooms, int numRooms){
+/*void connect_rooms(uint8_t map[mapHeight][mapWidth], room_t *rooms, int numRooms){
   int r, p1x, p1y, p2x, p2y, i, j, s, sy, ny1, ny2;
   float m;
 
@@ -98,6 +99,27 @@ void connect_rooms(uint8_t map[mapHeight][mapWidth], room_t *rooms, int numRooms
     }
   }
 }
+*/
+
+void connect_rooms(uint8_t map[mapHeight][mapWidth], room_t *rooms, int numRooms){
+  int r, p1x, p1y, p2x, p2y;
+  path_t p;
+  path_node_t *pn;
+
+  for(r = 0; r < numRooms; r++){
+    p1x = (2*rooms[r].xPos + rooms[r].width)/2;
+    p1y = (2*rooms[r].yPos + rooms[r].height)/2;
+    p2x = (2*rooms[(r+1)%numRooms].xPos + rooms[(r+1)%numRooms].width)/2;
+    p2y = (2*rooms[(r+1)%numRooms].yPos + rooms[(r+1)%numRooms].height)/2;
+    p = find_shortest_path(map, p1x, p1y, p2x, p2y);
+    pn = p.start;
+    while(pn){
+      map[pn->y][pn->x] = 0;
+      pn = pn->next;
+    }
+    deletePath(p);
+  }
+}
 
 void generateHardness(uint8_t map[][mapWidth]){
   int x, y;
@@ -115,7 +137,7 @@ void generateHardness(uint8_t map[][mapWidth]){
 }
 
 
-void init_map_char(char map_#define Min_Room_Number 10char[mapHeight][mapWidth]){
+void init_map_char(char map_char[mapHeight][mapWidth]){
   int i, j;
 
   for(j = 0; j < mapHeight; j++){
@@ -145,7 +167,7 @@ int generateMap(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][
   generateHardness(map_hard);
 
   //generates all the rooms
-  *room_count = rand()% Room_Number_Range + Min_Room_Number;
+  *room_count = rand()% Room_Number_Range + Room_Min_Number;
   int numRooms = *room_count;
   if(!(*rooms = malloc((sizeof (**rooms)) * numRooms))){
       return -1;
