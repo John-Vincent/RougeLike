@@ -77,3 +77,4 @@ February 8, 9:00-12:09 :
   -finished writing path_finder which uses the heap to find the shortest path and then returns a path_t linked list with all the
       data for which map location is in the path.
   -finished tying my path_finder into the map file.
+  -changed makefile to create a bin/ directory and store all generated files in there

@@ -1,24 +1,27 @@
 
-default: main.o map.o gameio.o path_finder.o que.o heap.o
-	gcc -o dungeonGenerator main.o map.o gameio.o path_finder.o que.o heap.o 
+CC =gcc
+ECHO = echo
+RM = rm -r
 
-main.o: main.c map.h main.h gameio.h
-	gcc -c main.c -Werror -Wall -ggdb
+CFLAGS = -Werror -Wall -ggdb
+BIN = ./bin/
+SOURCES = $(addprefix $(BIN), main.o map.o gameio.o path_finder.o que.o heap.o)
+EXE = $(BIN)dungeonGenerator
 
-map.o: map.c map.h path_finder.h
-	gcc -c map.c -Werror -Wall -ggdb
+default: create_bin $(EXE)
 
-gameio.o: gameio.c gameio.h
-	gcc -c gameio.c -Werror -Wall -ggdb
+$(EXE): $(SOURCES)
+	@$(ECHO) compiling $(EXE)
+	@$(CC) -o $(EXE) $(CFLAGS) $(SOURCES)
 
-path_finder.o: path_finder.h heap.h path_finder.c
-	gcc -c path_finder.c -Werror -Wall -ggdb
+$(BIN)%.o: %.c %.h
+	@$(CC) $(CFLAGS) -c $< -o $@
 
-que.o: que.c que.h
-	gcc -c que.c -Werror -Wall -ggdb
-
-heap.o: heap.h heap.c
-	gcc -c heap.c -Werror -Wall -ggdb
+.PHONY: clean create_bin default
 
 clean:
-	rm -v dungeonGenerator *.o
+	@$(ECHO) removing all binaries
+	@$(RM) $(BIN)
+
+create_bin:
+	@[ -d $(BIN) ] || mkdir $(BIN)
