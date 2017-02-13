@@ -1,7 +1,5 @@
-i added a new file for doing the file reading and writing, the functions
-write all the map data to a file as instructed. I only did big endian conversion
-on the file size value and the version number value because it seemed to me
-that everything else was 1 byte so it wouldnt need the conversion. I think
-the most important work i did during this assignment was reorganizing my code
-and changing the type of the hardness array to uint8_t. It should be easier to
-add code on top of the exising project going forward with this new organization.
+i used a heap to run dijkstras algorithm, and an array backed graph to store the
+values of the map during the algorithm. I print the 3 diffrent views in the order
+Normal view, non-tunnling view, then tunneling view. then exit. my save and load
+functions still work because i do everything with the character and path finding
+after any saving or loading.

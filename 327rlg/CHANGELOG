@@ -78,3 +78,14 @@ February 8, 9:00-12:09 :
       data for which map location is in the path.
   -finished tying my path_finder into the map file.
   -changed makefile to create a bin/ directory and store all generated files in there
+
+February 13, 1:30-23:00 :
+  - hid vertex_t within the pathfinder file
+  - add the find_distances fuction to the pathfinder file to complete the actual assignment for 1.03
+  - add the character file to do operations for the player character
+  - added the make character function that will generate a character in a room and set its symbol
+  - bug in heap where i was using 8 bit int to keep track of a 32 sized numebr
+  - bug in path finder where i didnt change from left to right when i copy pasted
+  - reorganized when everything prints so that i have more control in the main file
+  - found bug in save function where i wasn't passing by pointer so the main values for the dungeon room and room
+      number never got set

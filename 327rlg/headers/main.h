@@ -8,14 +8,17 @@
 #include <string.h>
 #include "map.h"
 #include "gameio.h"
+#include "character.h"
+#include "path_finder.h"
 
 typedef enum{ GENERATE, SAVE, LOAD, LOAD_SAVE} game_mode_t;
 
 typedef struct dungeon{
   uint8_t hardness[mapHeight][mapWidth];
   char chars[mapHeight][mapWidth];
+  uint16_t distances[mapHeight][mapWidth];
   room_t *rooms;
-  int numRooms;
+  uint8_t numRooms;
 } dungeon_t;
 
 /**
@@ -49,7 +52,7 @@ game_mode_t readArgs(int argc, char const *argv[], int **seed);
  * @author Collin Vincent <collinvincent96@gmail.com>
  * @date   2017-02-01T23:13:24+000
  */
-int save(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][mapWidth], room_t *rooms, int room_count);
+int save(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][mapWidth], room_t **rooms, uint8_t *room_count);
 
 /**
  * does the logic for loading the map to keep main clean
@@ -60,7 +63,7 @@ int save(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][mapWidt
  * @author Collin Vincent <collinvincent96@gmail.com>
  * @date   2017-02-01T23:18:02+000
  */
-int load(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][mapWidth], room_t **rooms, int *room_count);
+int load(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][mapWidth], room_t **rooms, uint8_t *room_count);
 
 /**
  * does the logic for the load and save option to keep the main clean
@@ -72,7 +75,7 @@ int load(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][mapWidt
  * @author Collin Vincent <collinvincent96@gmail.com>
  * @date   2017-02-01T23:40:08+000
  */
-int load_save(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][mapWidth], room_t **rooms, int *room_count);
+int load_save(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][mapWidth], room_t **rooms, uint8_t *room_count);
 
 
 

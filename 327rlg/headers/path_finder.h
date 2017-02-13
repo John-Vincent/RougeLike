@@ -6,18 +6,6 @@
 #include "map.h"
 #include "heap.h"
 
-typedef struct vertex{
-  uint8_t y;
-  uint8_t x;
-  uint8_t hard;
-  int32_t dist;
-  heap_node_t *heap;
-  struct vertex *up;
-  struct vertex *down;
-  struct vertex *left;
-  struct vertex *right;
-  struct vertex *prev;
-} vertex_t;
 
 typedef struct path_node{
   struct path_node *prev;
@@ -49,6 +37,17 @@ typedef enum{
  * @date   2017-02-04T00:14:39+000
  */
 path_t find_shortest_path(uint8_t hardness[mapHeight][mapWidth], uint8_t start_x, uint8_t start_y, uint8_t end_x, uint8_t end_y);
+
+/**
+ * finds the distances from one point in the map to every other point
+ * @param  [name]                  [description]
+ * @param  [name]                  [description]
+ * @param  start_x                 [description]
+ * @param  starty                  [description]
+ * @author Collin Vincent <collinvincent96@gmail.com>
+ * @date   2017-02-13T13:29:04+000
+ */
+int find_distances(uint8_t hardness[mapHeight][mapWidth], uint16_t distances[mapHeight][mapWidth], uint8_t start_x, uint8_t starty);
 
 /**
  * this method frees all the nodes of the dynamically allocated path linked list

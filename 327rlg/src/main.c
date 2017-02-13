@@ -1,7 +1,7 @@
 #include "../headers/main.h"
 
 
-
+character_t gen_player(dungeon_t dungeon);
 
 int main(int argc, char const *argv[]) {
 
@@ -13,6 +13,9 @@ int main(int argc, char const *argv[]) {
 
   dungeon_t dungeon;
 
+  character_t player;
+
+
   if(mode == GENERATE){
 
     if(generateMap(dungeon.hardness, dungeon.chars, &dungeon.rooms, &dungeon.numRooms)){
@@ -22,7 +25,7 @@ int main(int argc, char const *argv[]) {
 
   } else if(mode == SAVE){
 
-    if(save(dungeon.hardness, dungeon.chars, dungeon.rooms, dungeon.numRooms)){
+    if(save(dungeon.hardness, dungeon.chars, &dungeon.rooms, &dungeon.numRooms)){
       return -1;
     }
 
@@ -39,6 +42,18 @@ int main(int argc, char const *argv[]) {
     }
 
   }
+
+  if(make_character(&player, dungeon.rooms, dungeon.numRooms, "player")){
+    printf("failed to generate character, type does not exist");
+    return -1;
+  }
+  dungeon.chars[player.y][player.x] = player.sym;
+
+  printMap(dungeon.chars);
+  if(find_distances(dungeon.hardness, dungeon.distances, player.x, player.y)){
+    return -1;
+  }
+  printDistances(dungeon.distances, dungeon.hardness, player.x, player.y, player.sym);
 
 
   return 0;
@@ -82,14 +97,15 @@ game_mode_t readArgs(int argc, char const *argv[], int **seed){
   return mode;
 }
 
-int save(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][mapWidth], room_t *rooms, int room_count){
 
-  if(generateMap(map_hard, map_char, &rooms, &room_count)){
+int save(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][mapWidth], room_t **rooms, uint8_t *room_count){
+
+  if(generateMap(map_hard, map_char, rooms, room_count)){
     printf("failed to generate Map\n");
     return -1;
   }
 
-  if(saveMap(room_count, rooms, map_hard)){
+  if(saveMap(*room_count, *rooms, map_hard)){
     printf("failed to save map\n");
     return -1;
   }
@@ -100,7 +116,7 @@ int save(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][mapWidt
 }
 
 
-int load(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][mapWidth], room_t **rooms, int *room_count){
+int load(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][mapWidth], room_t **rooms, uint8_t *room_count){
 
   if(loadMap(rooms, room_count,  map_hard)){
     return -1;
@@ -108,13 +124,12 @@ int load(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][mapWidt
 
   init_map_char(map_char);
   drawMap(map_hard, map_char, *rooms, *room_count);
-  printMap(map_char);
 
   return 0;
 }
 
 
-int load_save(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][mapWidth], room_t **rooms, int *room_count){
+int load_save(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][mapWidth], room_t **rooms, uint8_t *room_count){
 
   if(loadMap(rooms, room_count,  map_hard)){
     return -1;
@@ -122,7 +137,6 @@ int load_save(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][ma
 
   init_map_char(map_char);
   drawMap(map_hard, map_char, *rooms, *room_count);
-  printMap(map_char);
 
   if(saveMap(*room_count, *rooms, map_hard)){
     printf("failed to save map\n");

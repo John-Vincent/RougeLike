@@ -9,7 +9,7 @@
  */
 int getPath(char *file_path);
 
-int saveMap(int numRooms, room_t const *rooms, uint8_t map_hard[mapHeight][mapWidth]){
+int saveMap(uint8_t numRooms, room_t const *rooms, uint8_t map_hard[mapHeight][mapWidth]){
   char *file_marker = "RLG327-S2017";
   uint32_t version = 0;
   uint32_t size = 16820 + (sizeof (*rooms) * numRooms);
@@ -52,7 +52,7 @@ int saveMap(int numRooms, room_t const *rooms, uint8_t map_hard[mapHeight][mapWi
 }
 
 
-int loadMap(room_t **rooms, int *numRooms, uint8_t map_hard[mapHeight][mapWidth]){
+int loadMap(room_t **rooms, uint8_t *numRooms, uint8_t map_hard[mapHeight][mapWidth]){
   char file_marker[12];
   uint32_t version;
   uint32_t size;

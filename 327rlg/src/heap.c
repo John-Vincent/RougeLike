@@ -2,6 +2,7 @@
 
 //#define TESTING_HEAP
 
+
 #define swap(p, c, t)({                 \
   (t) = (p)->children;                  \
   (p)->children = (c)->children;        \
@@ -42,6 +43,16 @@
   }                                     \
 })
 
+/*
+#define swap(p,c,t)({                   \
+    t.data = (p)->data;               \
+    (p)->data = (c)->data;              \
+    (c)->data = t.data;               \
+    t = *(p);                         \
+    *(p) = *(c);                        \
+    *(c) = (t);                         \
+})
+*/
 /**
  * this method is used to place a new node in the closest vacant location to the top of the heap.
  * @param  h                       the heap that will get the new node
@@ -58,6 +69,8 @@ static void place_node(heap_node_t *h, heap_node_t *n);
  * @date   2017-02-08T10:48:01+000
  */
 static void clear_node(heap_node_t *n);
+
+
 
 static void place_node(heap_node_t *h, heap_node_t *n){
   (h->children)++;

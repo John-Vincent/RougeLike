@@ -1,7 +1,7 @@
 #include "../headers/map.h"
-#include "../headers/path_finder.h"
 
-int generateRooms(room_t *rooms, int numRooms){
+
+int generateRooms(room_t *rooms, uint8_t numRooms){
   int i, j, d = 1, distx, disty, c;
 
   printf("----------Rooms----------\nXpos, Ypos, Width, Height\n");
@@ -41,12 +41,12 @@ int generateRooms(room_t *rooms, int numRooms){
     d = 1;
     printf("%03d,  %03d,   %03d,  %03d\n", rooms[i].xPos, rooms[i].yPos, rooms[i].width, rooms[i].height);
   }
-  printf("-------------------------");
+  printf("-------------------------\n");
   return 0;
 }
 
 
-void drawMap(uint8_t map[mapHeight][mapWidth], char map_c[mapHeight][mapWidth], room_t *rooms, int numRooms){
+void drawMap(uint8_t map[mapHeight][mapWidth], char map_c[mapHeight][mapWidth], room_t *rooms, uint8_t numRooms){
   int i, j, r;
 
   for(i = 0; i < mapHeight; i++){
@@ -101,9 +101,9 @@ void drawMap(uint8_t map[mapHeight][mapWidth], char map_c[mapHeight][mapWidth], 
 }
 */
 
-void connect_rooms(uint8_t map[mapHeight][mapWidth], room_t *rooms, int numRooms){
+void connect_rooms(uint8_t map[mapHeight][mapWidth], room_t *rooms, uint8_t numRooms){
   int r, p1x, p1y, p2x, p2y;
-  path_t p;
+  path_t p[numRooms];
   path_node_t *pn;
 
   for(r = 0; r < numRooms; r++){
@@ -111,13 +111,15 @@ void connect_rooms(uint8_t map[mapHeight][mapWidth], room_t *rooms, int numRooms
     p1y = (2*rooms[r].yPos + rooms[r].height)/2;
     p2x = (2*rooms[(r+1)%numRooms].xPos + rooms[(r+1)%numRooms].width)/2;
     p2y = (2*rooms[(r+1)%numRooms].yPos + rooms[(r+1)%numRooms].height)/2;
-    p = find_shortest_path(map, p1x, p1y, p2x, p2y);
-    pn = p.start;
+    p[r] = find_shortest_path(map, p1x, p1y, p2x, p2y);
+  }
+  for(r = 0; r< numRooms; r++){
+    pn = p[r].start;
     while(pn){
       map[pn->y][pn->x] = 0;
       pn = pn->next;
     }
-    deletePath(p);
+    deletePath(p[r]);
   }
 }
 
@@ -149,18 +151,46 @@ void init_map_char(char map_char[mapHeight][mapWidth]){
 
 
 void printMap(char map[mapHeight][mapWidth]){
-  int j, i;
+  int j;
 
   for(j = 0; j < mapHeight; j++){
-    for(i = 0; i < mapWidth; i++){
-      printf("%c", map[j][i]);
+    printf("%.*s\n", mapWidth, map[j]);
+  }
+  printf("\n");
+}
+
+void printDistances(uint16_t distances[mapHeight][mapWidth], uint8_t hardness[mapHeight][mapWidth], uint8_t x, uint8_t y, char sym){
+  int j, i;
+  char c[mapHeight][mapWidth], temp;
+
+  for(i = 0; i<mapHeight; i++){
+    for(j = 0; j<mapWidth; j++){
+      temp = (char)(distances[i][j]%10 + '0');
+      if(hardness[i][j]==0){
+        if(i == y && j == x){
+          printf("%c", sym);
+        } else{
+          printf("%c", temp);
+        }
+      } else{
+        printf(" ");
+      }
+      c[i][j] = temp;
     }
-    printf("\n");
+      printf("\n");
+  }
+
+  c[y][x] = sym;
+
+  printf("\n");
+
+  for(i = 0; i<mapHeight; i++){
+    printf("%.*s\n", mapWidth,  c[i]);
   }
 }
 
 
-int generateMap(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][mapWidth], room_t **rooms, int *room_count){
+int generateMap(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][mapWidth], room_t **rooms, uint8_t *room_count){
   init_map_char(map_char);
 
   //assigns hardness value to all areas in the map
@@ -179,6 +209,5 @@ int generateMap(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][
   //set the hardness of map array to 0 to create paths between rooms
   connect_rooms(map_hard, *rooms, numRooms);
   drawMap(map_hard, map_char, *rooms, numRooms);
-  printMap(map_char);
   return 0;
 }

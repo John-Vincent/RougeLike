@@ -1,10 +1,6 @@
 #ifndef MAP_H
 #define MAP_H
 
-#include <stdint.h>
-#include <stdlib.h>
-#include <stdio.h>
-
 #define mapWidth 160
 #define mapHeight 105
 #define Room_Min_Width 7
@@ -13,6 +9,11 @@
 #define Room_Width_Range 20
 #define Room_Height_Range 15
 #define Room_Number_Range 10
+
+#include <stdint.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include "path_finder.h"
 
 
 typedef struct room {
@@ -29,7 +30,7 @@ typedef struct room {
  * @author Collin Vincent <collinvincent96@gmail.com>
  * @date   2017-01-25T17:36:02+000
  */
-int generateRooms(room_t *rooms, int numRooms);
+int generateRooms(room_t *rooms, uint8_t numRooms);
 
 /**
  * draws the Rooms to the map
@@ -40,7 +41,7 @@ int generateRooms(room_t *rooms, int numRooms);
  * @author Collin Vincent <collinvincent96@gmail.com>
  * @date   2017-01-25T17:36:38+000
  */
-void drawMap(uint8_t map[mapHeight][mapWidth], char map_char[mapHeight][mapWidth], room_t *rooms, int numRooms);
+void drawMap(uint8_t map[mapHeight][mapWidth], char map_char[mapHeight][mapWidth], room_t *rooms, uint8_t numRooms);
 
 /**
  * draws a straight line from the center of one room and and the center of its neighbor in the array
@@ -51,7 +52,7 @@ void drawMap(uint8_t map[mapHeight][mapWidth], char map_char[mapHeight][mapWidth
  * @author Collin Vincent <collinvincent96@gmail.com>
  * @date   2017-01-25T20:54:01+000
  */
-void connect_rooms(uint8_t map[mapHeight][mapWidth], room_t *rooms, int numRooms);
+void connect_rooms(uint8_t map[mapHeight][mapWidth], room_t *rooms, uint8_t numRooms);
 
 /**
  * generates a random rock hardness value for each position in the map.
@@ -79,6 +80,16 @@ void init_map_char(char map_char[mapHeight][mapWidth]);
 void printMap(char map[mapHeight][mapWidth]);
 
 /**
+ * prints the distances for tunnling and non tunnling monsters
+ * @param  distances               the distances for the map
+ * @param  hardness                the hardness values for the map
+ * @return
+ * @author Collin Vincent <collinvincent96@gmail.com>
+ * @date   2017-02-13T20:18:49+000
+ */
+void printDistances(uint16_t distances[mapHeight][mapWidth], uint8_t hardness[mapHeight][mapWidth], uint8_t x, uint8_t y, char sym);
+
+/**
  * generates a new map
  *
  * @param  map_hard                an empty int array that will be filled with the maps hardness values.
@@ -88,6 +99,7 @@ void printMap(char map[mapHeight][mapWidth]);
  * @author Collin Vincent <collinvincent96@gmail.com>
  * @date   2017-02-01T16:22:56+000
  */
-int generateMap(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][mapWidth], room_t **rooms, int *room_count);
+int generateMap(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][mapWidth], room_t **rooms, uint8_t *room_count);
+
 
 #endif
