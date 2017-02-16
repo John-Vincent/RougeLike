@@ -128,7 +128,7 @@ void generateHardness(uint8_t map[][mapWidth]){
 
   for(y = 0; y < mapHeight; y++){
     for(x = 0; x < mapWidth; x++){
-      if(x==0 && y==0 && x==mapWidth-1 && y==mapHeight){
+      if(x==0 || y==0 || x==mapWidth-1 || y==mapHeight-1){
         map[y][x] = 0xFF;
       }
       else{

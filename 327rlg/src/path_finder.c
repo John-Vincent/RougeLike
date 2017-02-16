@@ -190,7 +190,7 @@ int find_distances(uint8_t hardness[mapHeight][mapWidth], uint16_t distances[map
         if(u->left->hard > 170){
           alt++;
           if(u->left->hard == 255){
-            alt = 0xFFF9;
+            alt = 0x7FF7;
           }
         }
       }
@@ -206,7 +206,7 @@ int find_distances(uint8_t hardness[mapHeight][mapWidth], uint16_t distances[map
         if(u->right->hard > 170){
           alt++;
           if(u->right->hard == 255){
-            alt = 0xFFF9;
+            alt = 0x7FF7;
           }
         }
       }
@@ -222,7 +222,7 @@ int find_distances(uint8_t hardness[mapHeight][mapWidth], uint16_t distances[map
         if(u->up->hard > 170){
           alt++;
           if(u->up->hard == 255){
-            alt = 0xFFF9;
+            alt = 0x7FF7;
           }
         }
       }
@@ -238,7 +238,7 @@ int find_distances(uint8_t hardness[mapHeight][mapWidth], uint16_t distances[map
         if(u->down->hard > 170){
           alt++;
           if(u->down->hard == 255){
-            alt = 0xFFF9;
+            alt = 0x7FF7;
           }
         }
       }

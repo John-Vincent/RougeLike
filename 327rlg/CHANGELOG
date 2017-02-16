@@ -89,3 +89,10 @@ February 13, 1:30-23:00 :
   - reorganized when everything prints so that i have more control in the main file
   - found bug in save function where i wasn't passing by pointer so the main values for the dungeon room and room
       number never got set
+---------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------Assigment 1.04--------------------------------------------------------------------------------------
+  Februrary 16, 10:30-11:30  :
+    -fixed but with the hardness values around the boarder
+      -now the tunnling path map should display 9's for all values with a hardness of 255
+          and every value around the edge should have a hardness of 255, (the actaul distance is 0x7FF7, which should be
+          high enough to prevent any npc from using it).
