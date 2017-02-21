@@ -25,8 +25,8 @@ $(BIN)%.o: $(SRCS)%.c $(OBJS)%.h
 .PHONY: clean create_bin default
 
 clean:
-	@$(ECHO) removing all binaries
-	@$(RM) $(BIN)
+	@[ ! -d $(BIN) ] || $(ECHO) removing all binaries
+	@[ ! -d $(BIN) ] || $(RM) $(BIN)
 
 create_bin:
 	@[ -d $(BIN) ] || mkdir $(BIN)

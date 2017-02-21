@@ -96,3 +96,16 @@ February 13, 1:30-23:00 :
       -now the tunnling path map should display 9's for all values with a hardness of 255
           and every value around the edge should have a hardness of 255, (the actaul distance is 0x7FF7, which should be
           high enough to prevent any npc from using it).
+
+  Februrary 20, 20:45-xx:xx :
+    -added des.c and des.h files which will hold the functions for storing the turn order and
+      and calling the takeTurn Functions.
+    -added the takeTurn function to the character.h file.
+    -added speed attribute to the character struct.
+    -added the next turn value to the character struct.
+    -added the monster struct.
+    -added character_t to dungeon_t
+    -added generate_monsters to character.h
+    -added attribute definitions to character.h
+    -removed make_character from character.c, it just doesnt fit my design anymore
+    -added display function in main.c because i dont want to rewrite the printMap function in map.c

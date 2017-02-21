@@ -1,65 +1,74 @@
 #include "../headers/main.h"
 
 
-character_t gen_player(dungeon_t dungeon);
+void display(const dungeon_t *dungeon);
 
 int main(int argc, char const *argv[]) {
 
+  dungeon_t *dungeon;
+
   int *seed = NULL;
+
+  int nummon = default_monster_num;
   //reads the args sets the mode and gives the
-  game_mode_t mode = readArgs(argc, argv, &seed);
+  game_mode_t mode;
+
+  dungeon = calloc(1, sizeof (dungeon_t));
+
+  if(readArgs(argc, argv, &mode, &seed, &nummon)){
+    return -1;
+  }
   //initalize random number generator and map matrix
   initRandom(seed);
 
-  dungeon_t dungeon;
-
-  character_t player;
 
 
   if(mode == GENERATE){
 
-    if(generateMap(dungeon.hardness, dungeon.chars, &dungeon.rooms, &dungeon.numRooms)){
+    if(generateMap(dungeon->hardness, dungeon->chars, &(dungeon->rooms), &(dungeon->numRooms))){
       printf("failed to generate Map\n");
       return -1;
     }
 
   } else if(mode == SAVE){
 
-    if(save(dungeon.hardness, dungeon.chars, &dungeon.rooms, &dungeon.numRooms)){
+    if(save(dungeon->hardness, dungeon->chars, &(dungeon->rooms), &(dungeon->numRooms))){
       return -1;
     }
 
   } else if(mode == LOAD){
 
-    if(load(dungeon.hardness, dungeon.chars, &dungeon.rooms, &dungeon.numRooms)){
+    if(load(dungeon->hardness, dungeon->chars, &(dungeon->rooms), &(dungeon->numRooms))){
       return -1;
     }
 
   } else if(mode == LOAD_SAVE){
 
-    if(load_save(dungeon.hardness, dungeon.chars, &dungeon.rooms, &dungeon.numRooms)){
+    if(load_save(dungeon->hardness, dungeon->chars, &(dungeon->rooms), &(dungeon->numRooms))){
       return -1;
     }
 
   }
 
-  if(make_character(&player, dungeon.rooms, dungeon.numRooms, "player")){
-    printf("failed to generate character, type does not exist");
+  dungeon->num_characters = 0;
+
+  if(generate_characters(dungeon, nummon)){
     return -1;
   }
-  dungeon.chars[player.y][player.x] = player.sym;
 
-  printMap(dungeon.chars);
+  display(dungeon);
+
+  /*printMap(dungeon.chars);
   if(find_distances(dungeon.hardness, dungeon.distances, player.x, player.y)){
     return -1;
   }
   printDistances(dungeon.distances, dungeon.hardness, player.x, player.y, player.sym);
-
+  */
 
   return 0;
 }
 
-void initRandom(int const *seed){
+void initRandom(int *seed){
   int t;
   if(seed == NULL){
     t = time(NULL);
@@ -68,33 +77,40 @@ void initRandom(int const *seed){
   }
   printf("time seed: %d\n", t);
   srand(t);
+  free(seed);
 }
 
-game_mode_t readArgs(int argc, char const *argv[], int **seed){
-  int i, t;
-  game_mode_t mode = GENERATE;
+uint32_t readArgs(int argc, char const *argv[], game_mode_t *mode, int **seed, int *nummon){
+  int i;
+  *mode = GENERATE;
 
   for(i = 1; i < argc; i++){
     if(strcmp(argv[i], "-t")==0){
       i++;
-      t = atoi(argv[i]);
-      *seed = &t;
+      *seed = malloc(sizeof (int));
+      **seed = atoi(argv[i]);
     } else if(strcmp(argv[i], "--save") == 0){
-      if(mode == LOAD){
-        mode = LOAD_SAVE;
+      if(*mode == LOAD){
+        *mode = LOAD_SAVE;
       } else {
-        mode = SAVE;
+        *mode = SAVE;
       }
     } else if(strcmp(argv[i], "--load") == 0){
-      if(mode == SAVE){
-        mode = LOAD_SAVE;
+      if(*mode == SAVE){
+        *mode = LOAD_SAVE;
       } else {
-        mode = LOAD;
+        *mode = LOAD;
       }
+    } else if(!strcmp(argv[i], "--nummon")){
+      i++;
+      *nummon = atoi(argv[i]);
+    } else{
+      printf("invalid argument: %s\n", argv[i]);
+      return -1;
     }
   }
 
-  return mode;
+  return 0;
 }
 
 
@@ -146,4 +162,20 @@ int load_save(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][ma
   printf("map saved\n");
 
   return 0;
+}
+
+void display(const dungeon_t *dungeon){
+  int i, j;
+
+  for(j = 0; j<mapHeight; j++){
+    for(i = 0; i<mapWidth; i++){
+      if(dungeon->characters[j][i]){
+        printf("%c", dungeon->characters[j][i]->sym);
+      } else{
+        printf("%c", dungeon->chars[j][i]);
+      }
+    }
+    printf("\n");
+  }
+
 }

@@ -11,15 +11,21 @@
 #include "character.h"
 #include "path_finder.h"
 
+#define default_monster_num 10;
+
 typedef enum{ GENERATE, SAVE, LOAD, LOAD_SAVE} game_mode_t;
 
 typedef struct dungeon{
   uint8_t hardness[mapHeight][mapWidth];
   char chars[mapHeight][mapWidth];
   uint16_t distances[mapHeight][mapWidth];
+  character_t *characters[mapHeight][mapWidth];
+  character_t player;
   room_t *rooms;
   uint8_t numRooms;
+  uint32_t num_characters;
 } dungeon_t;
+
 
 /**
  * initalizes the random number generator base on user input, this is basically just to keep main clean.
@@ -28,19 +34,20 @@ typedef struct dungeon{
  * @author Collin Vincent <collinvincent96@gmail.com>
  * @date   2017-01-24T23:04:05+000
  */
-void initRandom(int const *seed);
+void initRandom(int *seed);
 
 /**
- * reads the command line args and determains the mode the program should be run in,
- * as well as taking any time seed passed from the user
- * @param  argc                    number of arguments.
- * @param  argv                    array of character pointers holing the arguments.
- * @param  seed                    pointer to an int pointer that will be assigned a value if the user supplys a time argument.
- * @return                         the mode the program should be run in.
+ * reads the command line arguments
+ * @param  argc                    the number of args
+ * @param  argv                    the arguments
+ * @param  mode                    pointer to a game mode
+ * @param  seed                    the time seed that is to be used
+ * @param  nummon                  the number of monsters to generate
+ * @return                         0 if success -1 if fail
  * @author Collin Vincent <collinvincent96@gmail.com>
- * @date   2017-02-01T19:59:39+000
+ * @date   2017-02-20T22:05:29+000
  */
-game_mode_t readArgs(int argc, char const *argv[], int **seed);
+uint32_t readArgs(int argc, char const *argv[], game_mode_t *mode, int **seed, int *nummon);
 
 /**
  * does the logic for saveing the game to keep the main clean
