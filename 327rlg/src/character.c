@@ -109,8 +109,12 @@ const struct{
 
     x = 0;
     y = 0;
-    if(character->attrib & intelligent)
-      distance = *dungeon->distances_intel;
+    if(character->attrib & intelligent){
+      if(character->attrib & tunneler)
+        distance = *dungeon->distances_intel;
+      else
+        distance = *dungeon->distances_notun;
+    }
     else
       distance = *dungeon->distances;
 
@@ -120,19 +124,13 @@ const struct{
         (character->attrib & telepathic || can_see(dungeon->hardness, dungeon->player->x, dungeon->player->y, character->x, character->y))){
         for(i = character->y-1; i < character->y +2; i++){
           for(j = character->x - 1; j < character->x + 2; j++){
-            if(i-character->y||j-character->x){
+            if((i == character->y||j == character->x) && (i != character->y || j != character->x)){
               if(*(distance + i*mapWidth + j) < dist){
                 if(!dungeon->hardness[i][j]){
                   x = j;
                   y = i;
                   dist = *(distance + i * mapWidth + j);
                 } else if(character->attrib & tunneler){
-                  if(dungeon->hardness[i][j] > 85){
-                    dungeon->hardness[i][j] -= 85;
-                  } else{
-                    dungeon->hardness[i][j] = 0;
-                    dungeon->chars[i][j] = '#';
-                  }
                   x = j;
                   y = i;
                   dist = *(distance + i*mapWidth + j);
@@ -145,32 +143,56 @@ const struct{
       if(!x){
         x = 0;
         while(!x){
-          x = rand() % 3 - 1 + character->x;
-          y = rand() % 3 - 1 + character->y;
+          if(rand() & 1){
+            x = rand() % 3 - 1 + character->x;
+            y = character->y;
+          }
+          else{
+            y = rand() % 3 - 1 + character->y;
+            x = character->x;
+          }
           if(dungeon->hardness[y][x]){
-            if(character->attrib & tunneler && x > 0 && x<mapWidth-1 && y>0 && y<mapHeight-1){
-              if(dungeon->hardness[y][x] > 85){
-                dungeon->hardness[y][x] -= 85;
-              } else{
-                dungeon->hardness[y][x] = 0;
-                dungeon->chars[y][x] = '#';
-              }
-            } else{
+            if(!(character->attrib & tunneler && x > 0 && x<mapWidth-1 && y>0 && y<mapHeight-1)){
               x = 0;
             }
+          } else if(!(y-character->y||x-character->x) || !(!y-character->y||!x-character->x)){
+            x=0;
           }
         }
       }
     } else{
       while(!x){
-        x = rand() % 3 - 1 + character->x;
-        y = rand() % 3 - 1 + character->y;
+        if(rand() & 1){
+          x = rand() % 3 - 1 + character->x;
+          y = character->y;
+        }
+        else{
+          y = rand() % 3 - 1 + character->y;
+          x = character->x;
+        }
         if(dungeon->hardness[y][x]){
-            x = 0;
+          x = 0;
         }
       }
-      find_distances(dungeon->hardness, dungeon->distances, x, y, 0);
-      find_distances(dungeon->hardness, dungeon->distances_intel, x, y, 1);
+
+      find_distances(dungeon->hardness, dungeon->distances, x, y, 0, 1);
+      find_distances(dungeon->hardness, dungeon->distances_intel, x, y, 1, 1);
+      find_distances(dungeon->hardness, dungeon->distances_notun, x, y, 1, 0);
+    }
+
+    if(dungeon->hardness[y][x]){
+      if(dungeon->hardness[y][x] > 85){
+        dungeon->hardness[y][x] -= 85;
+        find_distances(dungeon->hardness, dungeon->distances, dungeon->player->x, dungeon->player->y, 0, 1);
+        find_distances(dungeon->hardness, dungeon->distances_intel, dungeon->player->x, dungeon->player->y, 1, 1);
+        find_distances(dungeon->hardness, dungeon->distances_notun, dungeon->player->x, dungeon->player->y, 1, 0);
+        return 0;
+      }
+      dungeon->hardness[y][x] = 0;
+      dungeon->chars[y][x] = '#';
+      find_distances(dungeon->hardness, dungeon->distances, dungeon->player->x, dungeon->player->y, 0, 1);
+      find_distances(dungeon->hardness, dungeon->distances_intel, dungeon->player->x, dungeon->player->y, 1, 1);
+      find_distances(dungeon->hardness, dungeon->distances_notun, dungeon->player->x, dungeon->player->y, 1, 0);
     }
 
     dungeon->characters[character->y][character->x] = NULL;
@@ -182,8 +204,6 @@ const struct{
     character->x = x;
     character->y = y;
     dungeon->characters[y][x] = character;
-
-
 
     if(dungeon->player->attrib == 0xFFFFFFFF)
       return 1;

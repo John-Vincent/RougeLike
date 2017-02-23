@@ -113,3 +113,11 @@ February 13, 1:30-23:00 :
   Februrary 22, 16:20:24:00 :
     -moved display to des.c
     -added can_see which uses Bresenam's algorithm to test line of sight
+    -code the take_turn method
+    -made the run_game method
+    -added a peek method to my heap so i can look without having to pop
+    -found bug, i forgot to set the old locations to null on the character map
+    -found bug i set the distance to 0xFFFFFFFF which made it negative one so all the
+      characters that were supose to know where the player was never acually found a distance
+      smaller in the distance array, so they would get assigned a random move.
+------------------------------------------------------------------------------------------------------------------------------------------      

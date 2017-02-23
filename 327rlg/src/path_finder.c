@@ -16,7 +16,7 @@ typedef struct vertex{
 
 static int32_t cmp_vertex(void *a, void *b);
 
-static int initNodes(heap_t *h, vertex_t nodes[mapHeight][mapWidth], uint8_t hardness[mapHeight][mapWidth]);
+static int initNodes(heap_t *h, vertex_t nodes[mapHeight][mapWidth], uint8_t hardness[mapHeight][mapWidth], uint8_t tunnel);
 
 #define turn_bias 30
 
@@ -31,7 +31,7 @@ path_t find_shortest_path(uint8_t hardness[mapHeight][mapWidth], uint8_t start_x
   int32_t alt;
 
   init_heap(&h, cmp_vertex);
-  initNodes(h, nodes, hardness);
+  initNodes(h, nodes, hardness, 1);
   u = &nodes[start_y][start_x];
   n = NULL;
   u->dist = 0;
@@ -120,43 +120,46 @@ static int32_t cmp_vertex(void *a, void *b){
 }
 
 
-static int initNodes(heap_t *h, vertex_t nodes[mapHeight][mapWidth], uint8_t hardness[mapHeight][mapWidth]){
+static int initNodes(heap_t *h, vertex_t nodes[mapHeight][mapWidth], uint8_t hardness[mapHeight][mapWidth], uint8_t tunnel){
   int i, j;
   for(i = 0; i < mapHeight; i++){
     for(j = 0; j < mapWidth; j++){
       nodes[i][j].hard = hardness[i][j];
-      nodes[i][j].x = j;
-      nodes[i][j].y = i;
-      nodes[i][j].dist = -1;
-      nodes[i][j].heap = h->insert(h, &nodes[i][j]);
-      if(!nodes[i][j].heap){
-        printf("failed to allocated memory");
-        return -1;
-      }
-      nodes[i][j].prev = NULL;
-      if(i > 0){
-        nodes[i][j].up = &nodes[i-1][j];
-      }
-      else {
-        nodes[i][j].up = NULL;
-      }
-      if(i < mapHeight-1){
-        nodes[i][j].down = &nodes[i+1][j];
-      }
-      else {
-        nodes[i][j].down = NULL;
-      }
-      if(j > 0){
-        nodes[i][j].left = &nodes[i][j-1];
-      }
-      else {
-        nodes[i][j].left = NULL;
-      }
-      if(j < mapWidth-1){
-        nodes[i][j].right = &nodes[i][j+1];
-      }
-      else {
-        nodes[i][j].right = NULL;
+      nodes[i][j].heap = NULL;
+      if(!hardness[i][j]||tunnel){
+        nodes[i][j].x = j;
+        nodes[i][j].y = i;
+        nodes[i][j].dist = -1;
+        nodes[i][j].heap = h->insert(h, &nodes[i][j]);
+        if(!nodes[i][j].heap){
+          printf("failed to allocated memory");
+          return -1;
+        }
+        nodes[i][j].prev = NULL;
+        if(i > 0 && (tunnel || !hardness[i-1][j])){
+          nodes[i][j].up = &nodes[i-1][j];
+        }
+        else {
+          nodes[i][j].up = NULL;
+        }
+        if(i < mapHeight-1 && (tunnel || !hardness[i+1][j])){
+          nodes[i][j].down = &nodes[i+1][j];
+        }
+        else {
+          nodes[i][j].down = NULL;
+        }
+        if(j > 0 && (tunnel || !hardness[i][j-1])){
+          nodes[i][j].left = &nodes[i][j-1];
+        }
+        else {
+          nodes[i][j].left = NULL;
+        }
+        if(j < mapWidth-1 && (tunnel || !hardness[i][j+1])){
+          nodes[i][j].right = &nodes[i][j+1];
+        }
+        else {
+          nodes[i][j].right = NULL;
+        }
       }
     }
   }
@@ -164,7 +167,7 @@ static int initNodes(heap_t *h, vertex_t nodes[mapHeight][mapWidth], uint8_t har
 }
 
 
-int find_distances(uint8_t hardness[mapHeight][mapWidth], uint16_t distances[mapHeight][mapWidth], uint8_t start_x, uint8_t start_y, uint8_t intel){
+int find_distances(uint8_t hardness[mapHeight][mapWidth], uint16_t distances[mapHeight][mapWidth], uint8_t start_x, uint8_t start_y, uint8_t intel, uint8_t tunnel){
 
   vertex_t nodes[mapHeight][mapWidth];
   vertex_t *u;
@@ -173,7 +176,7 @@ int find_distances(uint8_t hardness[mapHeight][mapWidth], uint16_t distances[map
   int16_t alt;
 
   init_heap(&h, cmp_vertex);
-  if(initNodes(h, nodes, hardness)){
+  if(initNodes(h, nodes, hardness, tunnel)){
     return -1;
   }
   u = &nodes[start_y][start_x];

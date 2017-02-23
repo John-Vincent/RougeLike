@@ -47,7 +47,7 @@ path_t find_shortest_path(uint8_t hardness[mapHeight][mapWidth], uint8_t start_x
  * @author Collin Vincent <collinvincent96@gmail.com>
  * @date   2017-02-13T13:29:04+000
  */
-int find_distances(uint8_t hardness[mapHeight][mapWidth], uint16_t distances[mapHeight][mapWidth], uint8_t start_x, uint8_t starty, uint8_t intel);
+int find_distances(uint8_t hardness[mapHeight][mapWidth], uint16_t distances[mapHeight][mapWidth], uint8_t start_x, uint8_t starty, uint8_t intel, uint8_t tunnel);
 
 /**
  * this method frees all the nodes of the dynamically allocated path linked list

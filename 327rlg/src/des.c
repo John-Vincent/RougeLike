@@ -32,8 +32,8 @@ int run_game(dungeon_t *dungeon){
           break;
         }
         if(c == dungeon->player){
-          //printDistances(dungeon->distances, dungeon->hardness, dungeon->player->x, dungeon->player->y, dungeon->player->sym);
-          printDistances(dungeon->distances_intel, dungeon->hardness, dungeon->player->x, dungeon->player->y, dungeon->player->sym);
+          printDistances(dungeon->distances, dungeon->hardness, dungeon->player->x, dungeon->player->y, dungeon->player->sym);
+          printDistances(dungeon->distances_notun, dungeon->hardness, dungeon->player->x, dungeon->player->y, dungeon->player->sym);
           display(dungeon);
           usleep(1000000);
         }

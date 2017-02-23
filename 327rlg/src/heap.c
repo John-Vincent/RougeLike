@@ -106,7 +106,8 @@ static void clear_node(heap_node_t *n){
 static void update_node(heap_t *h, heap_node_t *n){
   uint32_t t;
   heap_node_t *p;
-
+  if(!n->data)
+    return;
   while(n->parent && h->compare(n->data, n->parent->data) > 0){
     p = n->parent;
     swap(p, n, t);

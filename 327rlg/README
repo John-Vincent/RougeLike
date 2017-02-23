@@ -1,5 +1,6 @@
-i used a heap to run dijkstras algorithm, and an array backed graph to store the
-values of the map during the algorithm. I print the 3 diffrent views in the order
-Normal view, non-tunnling view, then tunneling view. then exit. my save and load
-functions still work because i do everything with the character and path finding
-after any saving or loading.
+In this assignment I added another 3 array's of the board to the dungeon struct,
+one holds pointers to the characters. this makes it easy for me to print the characters
+as well as detect attacks. the other array is a distance array except it holds
+the distances for monsters that want to move in a straight line, and one for non tunneling
+monsters. i used a character struct to represent both the monsters and the player character.
+i didnt all the logic for moving the PC and the NPC's in one function called take turn.

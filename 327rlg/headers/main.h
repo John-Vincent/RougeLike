@@ -19,6 +19,7 @@ typedef struct dungeon{
   uint8_t hardness[mapHeight][mapWidth];
   char chars[mapHeight][mapWidth];
   uint16_t distances[mapHeight][mapWidth];
+  uint16_t distances_notun[mapHeight][mapWidth];
   uint16_t distances_intel[mapHeight][mapWidth];
   character_t *characters[mapHeight][mapWidth];
   character_t *player;
