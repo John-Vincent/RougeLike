@@ -8,7 +8,7 @@ CFLAGS = -Werror -Wall -ggdb
 BIN = ./bin/
 OBJS = ./headers/
 SRCS = ./src/
-BINARIES = $(addprefix $(BIN), main map gameio path_finder que heap character)
+BINARIES = $(addprefix $(BIN), main map gameio path_finder que heap character des)
 BINARIES := $(addsuffix .o, $(BINARIES))
 EXE = $(BIN)RougeLikeGame
 

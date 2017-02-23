@@ -47,7 +47,7 @@ path_t find_shortest_path(uint8_t hardness[mapHeight][mapWidth], uint8_t start_x
  * @author Collin Vincent <collinvincent96@gmail.com>
  * @date   2017-02-13T13:29:04+000
  */
-int find_distances(uint8_t hardness[mapHeight][mapWidth], uint16_t distances[mapHeight][mapWidth], uint8_t start_x, uint8_t starty);
+int find_distances(uint8_t hardness[mapHeight][mapWidth], uint16_t distances[mapHeight][mapWidth], uint8_t start_x, uint8_t starty, uint8_t intel);
 
 /**
  * this method frees all the nodes of the dynamically allocated path linked list
@@ -57,5 +57,16 @@ int find_distances(uint8_t hardness[mapHeight][mapWidth], uint16_t distances[map
  */
 void deletePath(path_t p);
 
+/**
+ * determains if the characters can see each other
+ * @param  x1                      x of first character
+ * @param  y1                      y of first character
+ * @param  x2                      x of second  character
+ * @param  y2                      y of second character
+ * @return                         0 if they can't something else if they can
+ * @author Collin Vincent <collinvincent96@gmail.com>
+ * @date   2017-02-22T16:54:48+000
+ */
+int can_see(uint8_t hardness[mapHeight][mapWidth], int x1, int y1, int x2, int y2);
 
 #endif

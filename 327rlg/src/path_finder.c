@@ -5,7 +5,7 @@ typedef struct vertex{
   uint8_t x;
   uint8_t hard;
   int32_t dist;
-  heap_node_t *heap;
+  void *heap;
   struct vertex *up;
   struct vertex *down;
   struct vertex *left;
@@ -37,7 +37,7 @@ path_t find_shortest_path(uint8_t hardness[mapHeight][mapWidth], uint8_t start_x
   u->dist = 0;
   h->update(h, u->heap);
 
-  while(h->top){
+  while(h->peek(h)){
     u = (vertex_t*)(h->pop(h));
     if(u->x == end_x && u->y == end_y){
       break;
@@ -164,7 +164,7 @@ static int initNodes(heap_t *h, vertex_t nodes[mapHeight][mapWidth], uint8_t har
 }
 
 
-int find_distances(uint8_t hardness[mapHeight][mapWidth], uint16_t distances[mapHeight][mapWidth], uint8_t start_x, uint8_t start_y){
+int find_distances(uint8_t hardness[mapHeight][mapWidth], uint16_t distances[mapHeight][mapWidth], uint8_t start_x, uint8_t start_y, uint8_t intel){
 
   vertex_t nodes[mapHeight][mapWidth];
   vertex_t *u;
@@ -180,14 +180,14 @@ int find_distances(uint8_t hardness[mapHeight][mapWidth], uint16_t distances[map
   u->dist = 0;
   h->update(h, u->heap);
 
-  while(h->top){
+  while(h->peek(h)){
     u = (vertex_t*)(h->pop(h));
     distances[u->y][u->x] = u->dist;
     if(u->left){
       alt = u->dist + 1;
-      if(u->left->hard > 84){
+      if(u->left->hard > 84 && intel){
         alt++;
-        if(u->left->hard > 170){
+        if(u->left->hard > 170 && intel){
           alt++;
           if(u->left->hard == 255){
             alt = 0x7FF7;
@@ -201,9 +201,9 @@ int find_distances(uint8_t hardness[mapHeight][mapWidth], uint16_t distances[map
     }
     if(u->right){
       alt = u->dist + 1;
-      if(u->right->hard > 84){
+      if(u->right->hard > 84 && intel){
         alt++;
-        if(u->right->hard > 170){
+        if(u->right->hard > 170 && intel){
           alt++;
           if(u->right->hard == 255){
             alt = 0x7FF7;
@@ -217,9 +217,9 @@ int find_distances(uint8_t hardness[mapHeight][mapWidth], uint16_t distances[map
     }
     if(u->up){
       alt = u->dist + 1;
-      if(u->up->hard > 84){
+      if(u->up->hard > 84 && intel){
         alt++;
-        if(u->up->hard > 170){
+        if(u->up->hard > 170 && intel){
           alt++;
           if(u->up->hard == 255){
             alt = 0x7FF7;
@@ -233,9 +233,9 @@ int find_distances(uint8_t hardness[mapHeight][mapWidth], uint16_t distances[map
     }
     if(u->down){
       alt = u->dist + 1;
-      if(u->down->hard > 84){
+      if(u->down->hard > 84 && intel){
         alt++;
-        if(u->down->hard > 170){
+        if(u->down->hard > 170 && intel){
           alt++;
           if(u->down->hard == 255){
             alt = 0x7FF7;
@@ -250,4 +250,49 @@ int find_distances(uint8_t hardness[mapHeight][mapWidth], uint16_t distances[map
   }
   h->clear(h);
   return 0;
+}
+
+int can_see(uint8_t hardness[mapHeight][mapWidth], int x1, int y1, int x2, int y2){
+  int i, j;
+  float m, e;
+
+  if(x1-x2==0){
+    if(y1 > y2){
+      i = y2+1;
+      j = y1;
+    } else{
+      i = y1+1;
+      j = y2;
+    }
+    for(; i < j; i++){
+      if(hardness[i][x1] != 0)
+        return 0;
+    }
+    return 1;
+  }
+
+  m = (float)(y1 - y2) / (float)(x1 - x2);
+
+  if(m<0){
+    m = -1 * m;
+  }
+  e = m - 0.5;
+  if(x1 > x2){
+    i = -1;
+  }else{
+    i = 1;
+  }
+
+  for(; x1 != x2; x1+=i){
+    if(hardness[y1][x1]!=0){
+      return 0;
+    }
+    e += m;
+    if(e >= 0.5){
+      y1++;
+      e -= 1;
+    }
+  }
+
+  return 1;
 }

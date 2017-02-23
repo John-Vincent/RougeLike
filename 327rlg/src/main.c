@@ -1,7 +1,6 @@
 #include "../headers/main.h"
 
 
-void display(const dungeon_t *dungeon);
 
 int main(int argc, char const *argv[]) {
 
@@ -52,11 +51,9 @@ int main(int argc, char const *argv[]) {
 
   dungeon->num_characters = 0;
 
-  if(generate_characters(dungeon, nummon)){
+  if(!generate_characters(dungeon, nummon)){
     return -1;
   }
-
-  display(dungeon);
 
   /*printMap(dungeon.chars);
   if(find_distances(dungeon.hardness, dungeon.distances, player.x, player.y)){
@@ -65,8 +62,17 @@ int main(int argc, char const *argv[]) {
   printDistances(dungeon.distances, dungeon.hardness, player.x, player.y, player.sym);
   */
 
-  return 0;
+ run_game(dungeon);
+
+ free(dungeon->player);
+
+ return 0;
 }
+
+
+
+
+
 
 void initRandom(int *seed){
   int t;
@@ -79,6 +85,12 @@ void initRandom(int *seed){
   srand(t);
   free(seed);
 }
+
+
+
+
+
+
 
 uint32_t readArgs(int argc, char const *argv[], game_mode_t *mode, int **seed, int *nummon){
   int i;
@@ -114,6 +126,10 @@ uint32_t readArgs(int argc, char const *argv[], game_mode_t *mode, int **seed, i
 }
 
 
+
+
+
+
 int save(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][mapWidth], room_t **rooms, uint8_t *room_count){
 
   if(generateMap(map_hard, map_char, rooms, room_count)){
@@ -132,6 +148,9 @@ int save(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][mapWidt
 }
 
 
+
+
+
 int load(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][mapWidth], room_t **rooms, uint8_t *room_count){
 
   if(loadMap(rooms, room_count,  map_hard)){
@@ -143,6 +162,10 @@ int load(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][mapWidt
 
   return 0;
 }
+
+
+
+
 
 
 int load_save(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][mapWidth], room_t **rooms, uint8_t *room_count){
@@ -162,20 +185,4 @@ int load_save(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][ma
   printf("map saved\n");
 
   return 0;
-}
-
-void display(const dungeon_t *dungeon){
-  int i, j;
-
-  for(j = 0; j<mapHeight; j++){
-    for(i = 0; i<mapWidth; i++){
-      if(dungeon->characters[j][i]){
-        printf("%c", dungeon->characters[j][i]->sym);
-      } else{
-        printf("%c", dungeon->chars[j][i]);
-      }
-    }
-    printf("\n");
-  }
-
 }

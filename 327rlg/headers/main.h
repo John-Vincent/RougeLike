@@ -9,7 +9,7 @@
 #include "map.h"
 #include "gameio.h"
 #include "character.h"
-#include "path_finder.h"
+
 
 #define default_monster_num 10;
 
@@ -19,12 +19,15 @@ typedef struct dungeon{
   uint8_t hardness[mapHeight][mapWidth];
   char chars[mapHeight][mapWidth];
   uint16_t distances[mapHeight][mapWidth];
+  uint16_t distances_intel[mapHeight][mapWidth];
   character_t *characters[mapHeight][mapWidth];
-  character_t player;
+  character_t *player;
   room_t *rooms;
   uint8_t numRooms;
   uint32_t num_characters;
 } dungeon_t;
+
+#include "des.h"
 
 
 /**

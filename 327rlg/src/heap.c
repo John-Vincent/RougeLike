@@ -43,16 +43,17 @@
   }                                     \
 })
 
-/*
-#define swap(p,c,t)({                   \
-    t.data = (p)->data;               \
-    (p)->data = (c)->data;              \
-    (c)->data = t.data;               \
-    t = *(p);                         \
-    *(p) = *(c);                        \
-    *(c) = (t);                         \
-})
-*/
+
+
+
+typedef struct heap_node{
+  struct heap_node *parent;
+  struct heap_node *child[2];
+  uint32_t children;
+  void *data;
+} heap_node_t;
+
+
 /**
  * this method is used to place a new node in the closest vacant location to the top of the heap.
  * @param  h                       the heap that will get the new node
@@ -85,6 +86,12 @@ static void place_node(heap_node_t *h, heap_node_t *n){
   } else{
     place_node(h->child[1], n);
   }
+}
+
+static void *peek(heap_t *h){
+  if(!h->top)
+    return NULL;
+  return h->top->data;
 }
 
 static void clear_node(heap_node_t *n){
@@ -186,6 +193,7 @@ void init_heap(heap_t **h, int32_t (*compare)(void*, void*)){
   (*h)->insert = &insert_vertex;
   (*h)->pop = &heap_pop;
   (*h)->update = &update_node;
+  (*h)->peek = &peek;
 }
 
 

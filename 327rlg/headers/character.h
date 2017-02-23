@@ -7,10 +7,10 @@
 #include "map.h"
 
 
-#define intelligent = 0x1;
-#define telepathic = 0x2;
-#define tunneler = 0x4;
-#define erratic = 0x8;
+#define intelligent 0x1
+#define telepathic 0x2
+#define tunneler 0x4
+#define erratic 0x8
 
 struct dungeon;
 
@@ -27,9 +27,10 @@ typedef struct character{
 
 
 
-uint32_t takeTurn(struct dungeon *dungeon, character_t *character);
+int take_turn(struct dungeon *dungeon, character_t *character);
 
-uint32_t generate_characters(struct dungeon *dungeon, uint32_t num_monsters);
+void *generate_characters(struct dungeon *dungeon, uint32_t num_monsters);
 
+int compare_characters(void *child, void *parent);
 
 #endif

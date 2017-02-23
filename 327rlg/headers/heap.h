@@ -4,20 +4,15 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-typedef struct heap_node{
-  struct heap_node *parent;
-  struct heap_node *child[2];
-  uint32_t children;
-  void *data;
-} heap_node_t;
 
 typedef struct heap{
-  heap_node_t *top;
+  struct heap_node *top;
   int32_t (*compare)(void*, void*);
   void *(*pop)(struct heap*);
-  heap_node_t *(*insert)(struct heap*, void*);
+  struct heap_node *(*insert)(struct heap*, void*);
+  void *(*peek)(struct heap*);
   void (*clear)(struct heap*);
-  void (*update)(struct heap*, heap_node_t*);
+  void (*update)(struct heap*, struct heap_node*);
 } heap_t;
 
 /**
