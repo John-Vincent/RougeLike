@@ -1,6 +1,8 @@
-In this assignment I added another 3 array's of the board to the dungeon struct,
-one holds pointers to the characters. this makes it easy for me to print the characters
-as well as detect attacks. the other array is a distance array except it holds
-the distances for monsters that want to move in a straight line, and one for non tunneling
-monsters. i used a character struct to represent both the monsters and the player character.
-i didnt all the logic for moving the PC and the NPC's in one function called take turn.
+for this assignment i used a linked list to connect the different floors in the dungeon,
+ a heap for each floors turn order, and an array for each floors character list. each
+ floor stores pointers to its own data, so when moving to each floor the status of the
+ everything on the floor is preserved. When the player dies the game is stuck in Look
+ Mode until the user closes the program. the starting floor has no up staircase only
+ a descending one. Each floor below has one more monster than the floor above, making
+ the game more difficult as you progress. when the play goes down a floor they start
+ on top of the upwards stair case.

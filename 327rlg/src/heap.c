@@ -61,7 +61,7 @@ typedef struct heap_node{
  * @author Collin Vincent <collinvincent96@gmail.com>
  * @date   2017-02-08T10:46:20+000
  */
-static void place_node(heap_node_t *h, heap_node_t *n);
+void place_node(heap_node_t *h, heap_node_t *n);
 
 /**
  * this method makes recursive calls that will end up freeing all the dynamically allocated heap nodes in the heap
@@ -69,11 +69,11 @@ static void place_node(heap_node_t *h, heap_node_t *n);
  * @author Collin Vincent <collinvincent96@gmail.com>
  * @date   2017-02-08T10:48:01+000
  */
-static void clear_node(heap_node_t *n);
+void clear_node(heap_node_t *n);
 
 
 
-static void place_node(heap_node_t *h, heap_node_t *n){
+void place_node(heap_node_t *h, heap_node_t *n){
   (h->children)++;
   if(h->child[0]==NULL){
     h->child[0] = n;
@@ -88,13 +88,13 @@ static void place_node(heap_node_t *h, heap_node_t *n){
   }
 }
 
-static void *peek(heap_t *h){
+void *peek(heap_t *h){
   if(!h->top)
     return NULL;
   return h->top->data;
 }
 
-static void clear_node(heap_node_t *n){
+void clear_node(heap_node_t *n){
   if(n==NULL){
     return;
   }
@@ -103,7 +103,7 @@ static void clear_node(heap_node_t *n){
   free(n);
 }
 
-static void update_node(heap_t *h, heap_node_t *n){
+void update_node(heap_t *h, heap_node_t *n){
   uint32_t t;
   heap_node_t *p;
   if(!n->data)
@@ -117,12 +117,12 @@ static void update_node(heap_t *h, heap_node_t *n){
   }
 }
 
-static void clear_heap(heap_t *h){
+void clear_heap(heap_t *h){
   clear_node(h->top);
   h->top = NULL;
 }
 
-static void *heap_pop(heap_t *h){
+void *heap_pop(heap_t *h){
   heap_node_t *n, *c;
   uint32_t t;
 

@@ -24,5 +24,6 @@ typedef struct heap{
  */
 void init_heap(heap_t **h, int32_t (*compare)(void*, void*));
 
+void clear_heap(heap_t *h);
 
 #endif

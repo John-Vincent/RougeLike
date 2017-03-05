@@ -101,5 +101,19 @@ void printDistances(uint16_t distances[mapHeight][mapWidth], uint8_t hardness[ma
  */
 int generateMap(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][mapWidth], room_t **rooms, uint8_t *room_count);
 
+/**
+ * randomly places a '<' and/or '>' in the character array. they are garrentied to be within one
+ * of the rectangles passed in
+ *
+ * @param  [name]                  the 2d array of characters
+ * @param  rooms                   the array of rectangles that the symbols can by placed in
+ * @param  numRooms                the number of rectangles in the array
+ * @param  up                      0 if no < is to be placed anything else if < is to be placed
+ * @param  down                    0 if no > is to be placed anything else if > is to be placed
+ * @author Collin Vincent <collinvincent96@gmail.com>
+ * @date   2017-03-05T20:12:53+000
+ */
+void place_stairs(char chars[mapHeight][mapWidth], room_t *rooms, uint8_t numRooms, int up, int down);
+
 
 #endif

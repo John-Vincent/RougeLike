@@ -16,11 +16,12 @@ default: create_bin $(EXE)
 
 $(EXE): $(BINARIES)
 	@$(ECHO) compiling $(EXE)
-	@$(CC) -o $(EXE) $(CFLAGS) $(BINARIES)
+	@$(CC) -o $(EXE) $(CFLAGS) $(BINARIES) -lncurses
 
 $(BIN)%.o: $(SRCS)%.c $(OBJS)%.h
 	@$(ECHO) compiling $<
 	@$(CC) $(CFLAGS) -c $< -o $@
+
 
 .PHONY: clean create_bin default
 

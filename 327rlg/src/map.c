@@ -4,7 +4,7 @@
 int generateRooms(room_t *rooms, uint8_t numRooms){
   int i, j, d = 1, distx, disty, c;
 
-  printf("----------Rooms----------\nXpos, Ypos, Width, Height\n");
+  //printf("----------Rooms----------\nXpos, Ypos, Width, Height\n");
   for(i = 0; i<numRooms; i++){
     rooms[i].width = rand() % Room_Width_Range + Room_Min_Width;
     rooms[i].height = rand() % Room_Height_Range + Room_Min_Height;
@@ -39,9 +39,9 @@ int generateRooms(room_t *rooms, uint8_t numRooms){
       }
     }
     d = 1;
-    printf("%03d,  %03d,   %03d,  %03d\n", rooms[i].xPos, rooms[i].yPos, rooms[i].width, rooms[i].height);
+    //printf("%03d,  %03d,   %03d,  %03d\n", rooms[i].xPos, rooms[i].yPos, rooms[i].width, rooms[i].height);
   }
-  printf("-------------------------\n");
+  //printf("-------------------------\n");
   return 0;
 }
 
@@ -67,39 +67,33 @@ void drawMap(uint8_t map[mapHeight][mapWidth], char map_c[mapHeight][mapWidth], 
   }
 }
 
-/*void connect_rooms(uint8_t map[mapHeight][mapWidth], room_t *rooms, int numRooms){
-  int r, p1x, p1y, p2x, p2y, i, j, s, sy, ny1, ny2;
-  float m;
+void place_stairs(char chars[mapHeight][mapWidth], room_t *rooms, uint8_t numRooms, int up, int down){
+  int x, y;
+  room_t *r;
 
-  for(r = 0; r < numRooms; r++){
-    p1x = (2*rooms[r].xPos + rooms[r].width)/2;
-    p1y = (2*rooms[r].yPos + rooms[r].height)/2;
-    p2x = (2*rooms[(r+1)%numRooms].xPos + rooms[(r+1)%numRooms].width)/2;
-    p2y = (2*rooms[(r+1)%numRooms].yPos + rooms[(r+1)%numRooms].height)/2;
-    m = (float)(p1y - p2y) / (float)(p1x - p2x);
-    s = 1;
-    if(p1x>p2x){
-      s = -1;
+  if(up){
+    r = rooms + (rand() % numRooms);
+    x = rand() % r->width + r->xPos;
+    y = rand() % r->height + r->yPos;
+    while(chars[y][x] != '.' ){
+      r = rooms + (rand() % numRooms);
+      x = rand() % r->width + r->xPos;
+      y = rand() % r->height + r->yPos;
     }
-    i = p1x;
-    while(i != p2x){
-      ny1 = (int)(m*(i-p1x)+p1y);
-      ny2 = (int)(m*(i-p1x+s)+p1y);
-      map[ny1][i] = 0x00;
-      sy = 1;
-      if(ny1>ny2){
-        sy = -1;
-      }
-      j = ny1;
-      while(j!=ny2+sy){
-        map[j][i] = 0x00;
-        j+=sy;
-      }
-      i+=s;
+    chars[y][x] = '<';
+  }
+  if(down){
+    r = rooms + (rand() % numRooms);
+    x = rand() % r->width + r->xPos;
+    y = rand() % r->height + r->yPos;
+    while(chars[y][x] != '.' ){
+      r = rooms + (rand() % numRooms);
+      x = rand() % r->width + r->xPos;
+      y = rand() % r->height + r->yPos;
     }
+    chars[y][x] = '>';
   }
 }
-*/
 
 void connect_rooms(uint8_t map[mapHeight][mapWidth], room_t *rooms, uint8_t numRooms){
   int r, p1x, p1y, p2x, p2y;
@@ -209,5 +203,6 @@ int generateMap(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][
   //set the hardness of map array to 0 to create paths between rooms
   connect_rooms(map_hard, *rooms, numRooms);
   drawMap(map_hard, map_char, *rooms, numRooms);
+  place_stairs(map_char, *rooms, *room_count, 0, 1);
   return 0;
 }

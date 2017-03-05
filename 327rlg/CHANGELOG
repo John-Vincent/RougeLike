@@ -110,7 +110,7 @@ February 13, 1:30-23:00 :
     -removed make_character from character.c, it just doesnt fit my design anymore
     -added display function in main.c because i dont want to rewrite the printMap function in map.c
 
-  Februrary 22, 16:20:24:00 :
+  Februrary 22, 16:20 - 24:00 :
     -moved display to des.c
     -added can_see which uses Bresenam's algorithm to test line of sight
     -code the take_turn method
@@ -120,4 +120,26 @@ February 13, 1:30-23:00 :
     -found bug i set the distance to 0xFFFFFFFF which made it negative one so all the
       characters that were supose to know where the player was never acually found a distance
       smaller in the distance array, so they would get assigned a random move.
-------------------------------------------------------------------------------------------------------------------------------------------      
+    -found bug when i let monsters move diagonally they would dig through digaonal paths
+        and this would crash my path finding algorith because i only connected things 4 ways
+        so i would have a bunch of nodes in the heap that would become isolated at the end
+------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------Assignemtn 1.05-------------------------------------------------------------------------------------------
+
+  Februrary 23, 14:00 - 15:30  :
+    -played around with add ncurses to des.c
+    -added getch call and stored result in the players attribute field since it was
+        unused space.
+    -added a message char * to the dungeon_t that way anything can add a message to
+        be displayed during the output.
+    -added the player_turn function to character to better organize the logic for player turns
+    -added a uint_8 x and y to dungeon for the view x and y location
+    -added the generate stairs function to map.c
+    -added switch statement in des.c that will handle the more basic input operations.
+    -added pointer to heap in the dungeon_t that way each floor can preserve the turn
+        order of the characters on the floor
+    -added the functionality to generate new floors, and added two dungeon_t pointers the
+        dungeon_t so i can connect floors in a linked list
+    -changed the look mode so that it scrolls by 10 units instead of a whole screen size
+        the entire screen moving was too disorientating.
+    -added color coding so that its easy to identify the different objects

@@ -1,6 +1,11 @@
 #ifndef RLG327
 #define RLG327
 
+
+#define screen_width 80
+#define screen_height 21
+
+
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -9,6 +14,7 @@
 #include "map.h"
 #include "gameio.h"
 #include "character.h"
+#include "heap.h"
 
 
 #define default_monster_num 10;
@@ -16,6 +22,8 @@
 typedef enum{ GENERATE, SAVE, LOAD, LOAD_SAVE} game_mode_t;
 
 typedef struct dungeon{
+  uint8_t x;
+  uint8_t y;
   uint8_t hardness[mapHeight][mapWidth];
   char chars[mapHeight][mapWidth];
   uint16_t distances[mapHeight][mapWidth];
@@ -26,6 +34,10 @@ typedef struct dungeon{
   room_t *rooms;
   uint8_t numRooms;
   uint32_t num_characters;
+  struct dungeon *upstairs;
+  struct dungeon *downstairs;
+  heap_t *turn_order;
+  char *message;
 } dungeon_t;
 
 #include "des.h"
