@@ -1,19 +1,10 @@
 #ifndef MAP_H
 #define MAP_H
 
-#define mapWidth 160
-#define mapHeight 105
-#define Room_Min_Width 7
-#define Room_Min_Height 5
-#define Room_Min_Number 10
-#define Room_Width_Range 20
-#define Room_Height_Range 15
-#define Room_Number_Range 10
 
 #include <stdint.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include "path_finder.h"
+#include "constants.h"
+
 
 
 typedef struct room {

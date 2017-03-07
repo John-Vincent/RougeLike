@@ -2,9 +2,8 @@
 #define CHARACTER_H
 
 #include <stdint.h>
-#include <stdlib.h>
-#include <string.h>
-#include "map.h"
+#include "constants.h"
+
 
 
 #define intelligent 0x1
@@ -23,8 +22,8 @@ typedef struct character{
   uint8_t x;
   uint8_t y;
 } character_t;
-#include "main.h"
 
+#include "dungeon.h"
 
 /**
  * does the logic for proccessing an NPC turn

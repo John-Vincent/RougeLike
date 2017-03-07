@@ -1,4 +1,8 @@
+#include <stdlib.h>
+#include <stdio.h>
 #include "../headers/path_finder.h"
+#include "../headers/map.h"
+#include "../headers/heap.h"
 
 typedef struct vertex{
   uint8_t y;

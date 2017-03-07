@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "../headers/heap.h"
 
 //#define TESTING_HEAP

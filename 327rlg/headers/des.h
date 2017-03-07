@@ -1,15 +1,8 @@
 #ifndef RLGDES_H
 #define RLGDES_H
 
-#include <unistd.h>
-#include <curses.h>
-#include <string.h>
-#include <stdio.h>
-#include "main.h"
-#include "map.h"
-#include "heap.h"
-#include "path_finder.h"
-#include "character.h"
+#include "constants.h"
+#include "dungeon.h"
 
 #define turnbias 1000
 

@@ -1,10 +1,8 @@
 #ifndef PATH_FINDER
 #define PATH_FINDER
 
-#include <stdlib.h>
 #include <stdint.h>
-#include "map.h"
-#include "heap.h"
+#include "constants.h"
 
 
 typedef struct path_node{

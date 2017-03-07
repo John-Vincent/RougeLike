@@ -143,3 +143,9 @@ February 13, 1:30-23:00 :
     -changed the look mode so that it scrolls by 10 units instead of a whole screen size
         the entire screen moving was too disorientating.
     -added color coding so that its easy to identify the different objects
+    -added dungeon.c and dungeon.h to seporate it from the main file
+    -moved as many includes from the headers to the source files as possible
+    -changed it so that when first visiting a floor the PC is randomly placed and
+        both stairs are in different locations, but when returning the PC will start
+        on the corrisponding staircase
+------------------------------------------------------------------------------------------------------------------------------------------------

@@ -1,4 +1,7 @@
+#include <stdlib.h>
+#include <stdio.h>
 #include "../headers/map.h"
+#include "../headers/path_finder.h"
 
 
 int generateRooms(room_t *rooms, uint8_t numRooms){
@@ -203,6 +206,6 @@ int generateMap(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][
   //set the hardness of map array to 0 to create paths between rooms
   connect_rooms(map_hard, *rooms, numRooms);
   drawMap(map_hard, map_char, *rooms, numRooms);
-  place_stairs(map_char, *rooms, *room_count, 0, 1);
+  place_stairs(map_char, *rooms, *room_count, 1, 1);
   return 0;
 }

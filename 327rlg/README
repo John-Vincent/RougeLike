@@ -6,3 +6,10 @@ for this assignment i used a linked list to connect the different floors in the 
  a descending one. Each floor below has one more monster than the floor above, making
  the game more difficult as you progress. when the play goes down a floor they start
  on top of the upwards stair case.
+
+ AMENDMENT
+  During lecture i was told that i was required to have stairs going both up
+  and down on the first floor, so i altered my program, it now randomly places
+  both stairs on the players first visit to any floor. However when the PC
+  returns to a floor then will apear on the stairs they took previously. So i have
+  semi connected floors.

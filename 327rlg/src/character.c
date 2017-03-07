@@ -1,4 +1,10 @@
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
 #include "../headers/character.h"
+#include "../headers/map.h"
+#include "../headers/path_finder.h"
+
 
 #define look_scroll 10
 

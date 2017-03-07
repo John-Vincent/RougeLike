@@ -1,4 +1,11 @@
+#include <endian.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <string.h>
 #include "../headers/gameio.h"
+
 
 /**
  * returns a string with the path to the file

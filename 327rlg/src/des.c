@@ -1,4 +1,13 @@
+#include <unistd.h>
+#include <curses.h>
+#include <string.h>
+#include <stdint.h>
+#include <stdio.h>
 #include "../headers/des.h"
+#include "../headers/map.h"
+#include "../headers/heap.h"
+#include "../headers/path_finder.h"
+#include "../headers/character.h"
 
 
 int npc_moves(dungeon_t *dungeon);
@@ -49,6 +58,15 @@ int run_game(dungeon_t *base){
       // upstairs
       case '<':
         if(dungeon->chars[dungeon->player->y][dungeon->player->x] == '<'){
+          if(dungeon->upstairs == NULL){
+            if(init_dungeon(&(dungeon->upstairs))){
+              running = false;
+              break;
+            }
+            dungeon->upstairs->downstairs = dungeon;
+            //for connected stairs
+            //dungeon->chars[dungeon->player->y][dungeon->player->x] = '<';
+          }
           dungeon = dungeon->upstairs;
           h = dungeon->turn_order;
           clear();
@@ -58,37 +76,21 @@ int run_game(dungeon_t *base){
       case '>':
         if(dungeon->chars[dungeon->player->y][dungeon->player->x] == '>'){
           if(dungeon->downstairs == NULL){
-            dungeon->downstairs = calloc(1, sizeof(dungeon_t));
-            if(!dungeon->downstairs){
+            if(init_dungeon(&(dungeon->downstairs))){
               running = false;
-              printf("error allocating downstairs");
+              break;
             }
-            if(generateMap(dungeon->downstairs->hardness, dungeon->downstairs->chars, &(dungeon->downstairs->rooms), &(dungeon->downstairs->numRooms))){
-              running = false;
-              printf("error making new map");
-            }
-            dungeon->downstairs->num_characters = 0;
-            if(generate_characters(dungeon->downstairs, dungeon->num_characters)){
-              running = false;
-              printf("error placing new characters");
-            }
-            dungeon->downstairs->chars[dungeon->downstairs->player->y][dungeon->downstairs->player->x] = '<';
             dungeon->downstairs->upstairs = dungeon;
-            init_heap(&(dungeon->downstairs->turn_order), compare_characters);
-            h = dungeon->downstairs->turn_order;
-            for(i = 0; i < dungeon->downstairs->num_characters; i++){
-              h->insert(h, dungeon->downstairs->player + i);
-            }
+            //for connected stairs
+            //dungeon->chars[dungeon->player->y][dungeon->player->x] = '<';
           }
           dungeon = dungeon->downstairs;
           h = dungeon->turn_order;
-          dungeon->x = dungeon->player->x;
-          dungeon->y = dungeon->player->y;
           clear();
         }
         break;
     }
-    if(!mode && dungeon->player->attrib != 0xffffffff){
+    if(!mode && dungeon->player->attrib != 0xffffffff && running){
       sprintf(temp, "input = %d, no action taken", input);
       dungeon->message = temp;
       if(!player_turn(dungeon, mode, input)){
@@ -102,7 +104,7 @@ int run_game(dungeon_t *base){
         }
       }
       display(dungeon);
-    } else{
+    } else if(running){
       if(dungeon->player->attrib == 0xffffffff){
         dungeon->message = "you lost!";
         mode = 1;

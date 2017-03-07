@@ -1,12 +1,6 @@
 #include "../headers/main.h"
 
-/**
- * this will recursivly free all the dungeons made during the operation of this game
- * @param  dungeon                 the root dungeon
- * @author Collin Vincent <collinvincent96@gmail.com>
- * @date   2017-03-05T20:12:12+000
- */
-void free_mem(dungeon_t *dungeon);
+
 
 int main(int argc, char const *argv[]) {
 
@@ -78,8 +72,6 @@ int main(int argc, char const *argv[]) {
 
 
 
-
-
 void initRandom(int *seed){
   int t;
   if(seed == NULL){
@@ -90,17 +82,6 @@ void initRandom(int *seed){
   printf("time seed: %d\n", t);
   srand(t);
   free(seed);
-}
-
-
-void free_mem(dungeon_t *dungeon){
-    if(dungeon->downstairs){
-      free_mem(dungeon->downstairs);
-    }
-    clear_heap(dungeon->turn_order);
-    free(dungeon->player);
-    free(dungeon->rooms);
-    free(dungeon);
 }
 
 
