@@ -16,7 +16,7 @@ void free_mem(dungeon_t *dungeon){
 }
 
 
-int init_dungeon(dungeon_t **d){
+int init_dungeon(dungeon_t **d, int nummon){
   int i;
 
   *d = calloc(1, sizeof(dungeon_t));
@@ -31,7 +31,7 @@ int init_dungeon(dungeon_t **d){
     return -1;
   }
   dungeon->num_characters = 0;
-  if(generate_characters(dungeon, dungeon->num_characters)){
+  if(generate_characters(dungeon, nummon)){
     printf("error placing new characters");
     return -1;
   }

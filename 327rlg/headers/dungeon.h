@@ -48,7 +48,7 @@ void free_mem(dungeon_t *dungeon);
  * @author Collin Vincent <collinvincent96@gmail.com>
  * @date   2017-03-06T22:24:42+000
  */
-int init_dungeon(dungeon_t **dungeon);
+int init_dungeon(dungeon_t **dungeon, int nummon);
 
 #ifdef __cplusplus
 }

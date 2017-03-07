@@ -59,7 +59,7 @@ int run_game(dungeon_t *base){
       case '<':
         if(dungeon->chars[dungeon->player->y][dungeon->player->x] == '<'){
           if(dungeon->upstairs == NULL){
-            if(init_dungeon(&(dungeon->upstairs))){
+            if(init_dungeon( &(dungeon->upstairs), dungeon->num_characters)){
               running = false;
               break;
             }
@@ -76,7 +76,7 @@ int run_game(dungeon_t *base){
       case '>':
         if(dungeon->chars[dungeon->player->y][dungeon->player->x] == '>'){
           if(dungeon->downstairs == NULL){
-            if(init_dungeon(&(dungeon->downstairs))){
+            if(init_dungeon( &(dungeon->downstairs), dungeon->num_characters)){
               running = false;
               break;
             }
