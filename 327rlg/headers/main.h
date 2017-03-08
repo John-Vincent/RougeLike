@@ -27,7 +27,7 @@ typedef enum{ GENERATE, SAVE, LOAD, LOAD_SAVE} game_mode_t;
  * @author Collin Vincent <collinvincent96@gmail.com>
  * @date   2017-01-24T23:04:05+000
  */
-void initRandom(int *seed);
+void initRandom(int seed);
 
 /**
  * reads the command line arguments
@@ -40,7 +40,7 @@ void initRandom(int *seed);
  * @author Collin Vincent <collinvincent96@gmail.com>
  * @date   2017-02-20T22:05:29+000
  */
-uint32_t readArgs(int argc, char const *argv[], game_mode_t *mode, int **seed, int *nummon);
+uint32_t readArgs(int argc, char const *argv[], game_mode_t *mode, int *seed, int *nummon);
 
 /**
  * does the logic for saveing the game to keep the main clean

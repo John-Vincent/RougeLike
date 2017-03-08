@@ -121,6 +121,7 @@ void update_node(heap_t *h, heap_node_t *n){
 void clear_heap(heap_t *h){
   clear_node(h->top);
   h->top = NULL;
+  free(h);
 }
 
 void *heap_pop(heap_t *h){

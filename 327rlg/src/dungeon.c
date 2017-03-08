@@ -7,7 +7,12 @@
 
 void free_mem(dungeon_t *dungeon){
     if(dungeon->downstairs){
+      dungeon->downstairs->upstairs = NULL;
       free_mem(dungeon->downstairs);
+    }
+    if(dungeon->upstairs){
+      dungeon->upstairs->downstairs = NULL;
+      free_mem(dungeon->upstairs);
     }
     clear_heap(dungeon->turn_order);
     free(dungeon->player);

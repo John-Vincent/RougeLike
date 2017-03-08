@@ -6,7 +6,7 @@ int main(int argc, char const *argv[]) {
 
   dungeon_t *dungeon;
 
-  int *seed = NULL;
+  int seed = 0;
 
   int nummon = default_monster_num;
   //reads the args sets the mode and gives the
@@ -72,28 +72,26 @@ int main(int argc, char const *argv[]) {
 
 
 
-void initRandom(int *seed){
+void initRandom(int seed){
   int t;
-  if(seed == NULL){
+  if(!seed){
     t = time(NULL);
   } else{
-    t = *seed;
+    t = seed;
   }
   printf("time seed: %d\n", t);
   srand(t);
-  free(seed);
 }
 
 
-uint32_t readArgs(int argc, char const *argv[], game_mode_t *mode, int **seed, int *nummon){
+uint32_t readArgs(int argc, char const *argv[], game_mode_t *mode, int *seed, int *nummon){
   int i;
   *mode = GENERATE;
 
   for(i = 1; i < argc; i++){
     if(strcmp(argv[i], "-t")==0){
       i++;
-      *seed = malloc(sizeof (int));
-      **seed = atoi(argv[i]);
+      *seed = atoi(argv[i]);
     } else if(strcmp(argv[i], "--save") == 0){
       if(*mode == LOAD){
         *mode = LOAD_SAVE;

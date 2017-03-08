@@ -79,6 +79,7 @@ path_t find_shortest_path(uint8_t hardness[mapHeight][mapWidth], uint8_t start_x
       }
     }
   }
+
   h->clear(h);
 
   p.dist = u->dist;
@@ -256,6 +257,7 @@ int find_distances(uint8_t hardness[mapHeight][mapWidth], uint16_t distances[map
     }
   }
   h->clear(h);
+
   return 0;
 }
 
