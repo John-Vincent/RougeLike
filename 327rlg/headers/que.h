@@ -4,6 +4,9 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
 
 typedef struct que_link{
   struct que_link *next;
@@ -22,5 +25,8 @@ typedef struct que{
 
 void init_que(que_t **q);
 
+#ifdef __cplusplus
+  }
+#endif
 
 #endif

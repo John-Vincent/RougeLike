@@ -23,6 +23,7 @@ typedef struct character{
   uint8_t y;
 } character_t;
 
+
 #include "dungeon.h"
 
 /**

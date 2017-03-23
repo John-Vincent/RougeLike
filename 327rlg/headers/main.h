@@ -10,10 +10,14 @@
 #include "dungeon.h"
 #include "map.h"
 #include "gameio.h"
-#include "character.h"
+#include "character_cpp.h"
 #include "des.h"
 
 #define default_monster_num 10;
+
+#ifdef __cplusplus
+  extern "C" {
+#endif
 
 typedef enum{ GENERATE, SAVE, LOAD, LOAD_SAVE} game_mode_t;
 
@@ -77,6 +81,8 @@ int load(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][mapWidt
  */
 int load_save(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][mapWidth], room_t **rooms, uint8_t *room_count);
 
-
+#ifdef __cplusplus
+  }
+#endif
 
 #endif

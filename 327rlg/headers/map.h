@@ -5,7 +5,9 @@
 #include <stdint.h>
 #include "constants.h"
 
-
+#ifdef __cplusplus
+  extern "C" {
+#endif
 
 typedef struct room {
   uint8_t xPos;
@@ -105,6 +107,11 @@ int generateMap(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][
  * @date   2017-03-05T20:12:53+000
  */
 void place_stairs(char chars[mapHeight][mapWidth], room_t *rooms, uint8_t numRooms, int up, int down);
+
+
+#ifdef __cplusplus
+  }
+#endif
 
 
 #endif

@@ -7,23 +7,23 @@
 #include "../headers/map.h"
 #include "../headers/heap.h"
 #include "../headers/path_finder.h"
-#include "../headers/character.h"
+#include "../headers/character_cpp.h"
 
-
-int npc_moves(dungeon_t *dungeon);
 
 int run_game(dungeon_t *base){
 
-  int i, mode = 0, input, running = 1;
+  int i, input, running = 1;
   dungeon_t *dungeon = base;
-  character_t *c;
+  character *c;
   heap_t *h;
   char temp[100] = " ";
+
+  dungeon->look = 0;
 
   init_heap(&(dungeon->turn_order), compare_characters);
   h = dungeon->turn_order;
   for(i = 0; i < dungeon->num_characters; i++){
-    h->insert(h, dungeon->player + i);
+    h->insert(h, dungeon->characters[i]);
   }
 
   initscr();
@@ -43,13 +43,12 @@ int run_game(dungeon_t *base){
     switch(input){
       // L
       case 76:
-        mode = 1;
+        dungeon->look = 1;
         break;
       // escape
       case 27:
-        mode = 0;
-        dungeon->x = dungeon->player->x;
-        dungeon->y = dungeon->player->y;
+        dungeon->look = 0;
+        set_dungeon_view(dungeon);
         break;
       // Q
       case 81:
@@ -57,7 +56,7 @@ int run_game(dungeon_t *base){
         break;
       // upstairs
       case '<':
-        if(dungeon->chars[dungeon->player->y][dungeon->player->x] == '<'){
+        if(on_stairs(dungeon) == 1){
           if(dungeon->upstairs == NULL){
             if(init_dungeon( &(dungeon->upstairs), dungeon->num_characters)){
               running = false;
@@ -69,12 +68,11 @@ int run_game(dungeon_t *base){
           }
           dungeon = dungeon->upstairs;
           h = dungeon->turn_order;
-          clear();
         }
         break;
       // downstairs
       case '>':
-        if(dungeon->chars[dungeon->player->y][dungeon->player->x] == '>'){
+        if(on_stairs(dungeon) == -1){
           if(dungeon->downstairs == NULL){
             if(init_dungeon( &(dungeon->downstairs), dungeon->num_characters)){
               running = false;
@@ -86,32 +84,39 @@ int run_game(dungeon_t *base){
           }
           dungeon = dungeon->downstairs;
           h = dungeon->turn_order;
-          clear();
         }
         break;
     }
-    if(!mode && dungeon->player->attrib != 0xffffffff && running){
+    if(!dungeon->look && !is_dead(dungeon->characters[0]) && running){
       sprintf(temp, "input = %d, no action taken", input);
       dungeon->message = temp;
-      if(!player_turn(dungeon, mode, input)){
-        c = (character_t *)h->pop(h);
-        c->next_turn = c->next_turn + turnbias / c->speed;
+      if(!take_turn(dungeon->characters[0], input)){
+        c = (character *)h->pop(h);
+        set_turn(c);
         h->insert(h, c);
-        if(npc_moves(dungeon)){
-          dungeon->message = "you lost!";
-        }else{
-          sprintf(temp, "input = %d, player life = %d", input, dungeon->player->attrib);
+
+        while(h->peek(h) != dungeon->characters[0]){
+          c = (character *)h->pop(h);
+          if(!is_dead(c)){
+            if(take_turn(c, input)){
+              dungeon->message = "you lost!";
+            }else{
+              sprintf(temp, "input = %d, player life = %d", input, 1);
+            }
+            set_turn(c);
+            h->insert(h, c);
+          }
         }
       }
       display(dungeon);
     } else if(running){
-      if(dungeon->player->attrib == 0xffffffff){
+      if(is_dead(dungeon->characters[0])){
         dungeon->message = "you lost!";
-        mode = 1;
+        dungeon->look = 1;
       }else{
         dungeon->message = "LOOK MODE";
       }
-      player_turn(dungeon, mode, input);
+      take_turn(dungeon->characters[0], input);
       display(dungeon);
     }
   }
@@ -121,25 +126,11 @@ int run_game(dungeon_t *base){
 }
 
 
-int npc_moves(dungeon_t *dungeon){
-  character_t *c;
-  int died = 0;
-
-  while(dungeon->player != (character_t *)dungeon->turn_order->peek(dungeon->turn_order)){
-    c = (character_t *)dungeon->turn_order->pop(dungeon->turn_order);
-    if(c->attrib != 0xFFFFFFFF){
-      if(take_turn(dungeon, c)){
-        died = 1;
-      }
-      c->next_turn = c->next_turn + turnbias / c->speed;
-      dungeon->turn_order->insert(dungeon->turn_order, c);
-    }
-  }
-  return died;
-}
-
 void display(dungeon_t *dungeon){
   int i, j, x, y;
+  char symbol;
+
+  clear();
 
   x = dungeon->x - screen_width/2;
   y = dungeon->y - screen_height/2;
@@ -156,13 +147,14 @@ void display(dungeon_t *dungeon){
 
   for(j = 1; j< screen_height + 1; j++){
     for(i = 0; i< screen_width; i++){
-      if(dungeon->characters[y + j][x + i]){
-        if(dungeon->characters[y + j][x + i] == dungeon->player)
+      symbol = get_char(dungeon, x+i, y+j);
+      if(symbol){
+        if(symbol == '@')
           attron(COLOR_PAIR(2));
         else
           attron(COLOR_PAIR(3));
-        mvprintw(j, i, "%c", dungeon->characters[y+j][x+i]->sym);
-      } else{
+        mvprintw(j, i, "%c", symbol);
+      } else if(dungeon->visited[y+j][x+i] == 1){
         if(dungeon->chars[y+j][x+i] == '<' || dungeon->chars[y+j][x+i] == '>')
           attron(COLOR_PAIR(4));
         else

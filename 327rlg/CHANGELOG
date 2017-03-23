@@ -149,3 +149,18 @@ February 13, 1:30-23:00 :
         both stairs are in different locations, but when returning the PC will start
         on the corrisponding staircase
 ------------------------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------Assignment 1.06--------------------------------------------------------------------------------------------
+
+  March 23, 3:00pm - 2:12am :
+    -created the character_cpp.h header which will be the header file for character.cpp npc.cpp and pc.cpp
+    -created the character npc and pc classes as well as the prototypes for the functions that will allow the
+        C code to interface with the c++ code.
+    -coded the functions for all the cpp and made the small changes necissary to use the cpp in the rest of my
+        project. Since i had already been following a sudo object-oriented pattern with my C code, it was pretty
+        easy to substitute in the c++.
+    -removed the Characters 2d array and renamed the player pointer to characters, now i just have an array of all
+        the characters.
+    -added a new 2d array to the dungeon struct called visited which remembers the locations the player has been to.
+    -added a check to see if NPC's are within 5 blocks of the PC before printing them to the screen
+    -added a check to make sure the visited array value is 1 before printing a environment character to the screen.
+---------------------------------------------------------------------------------------------------------------------------------------------------

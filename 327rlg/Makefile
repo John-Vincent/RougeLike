@@ -1,22 +1,34 @@
-
+CXX = g++
 CC =gcc
 ECHO = echo
 RM = rm -vr
 
-
+CXXFLAGS = -Werror -Wall -ggdb
 CFLAGS = -Werror -Wall -ggdb
 BIN = ./bin/
 OBJS = ./headers/
 SRCS = ./src/
-BINARIES = $(addprefix $(BIN), main map gameio path_finder que heap character des dungeon)
-BINARIES := $(addsuffix .o, $(BINARIES))
+
+
+CBINARIES = $(addprefix $(BIN), main map gameio path_finder que heap des dungeon)
+CBINARIES := $(addsuffix .o, $(CBINARIES))
+
+CXXBINARIES = $(addprefix $(BIN), character npc pc)
+CXXBINARIES := $(addsuffix .cpp.o, $(CXXBINARIES))
+
+BINARIES = $(CBINARIES) $(CXXBINARIES)
+
 EXE = $(BIN)RougeLikeGame
 
 default: create_bin $(EXE)
 
-$(EXE): $(BINARIES)
+$(EXE): $(CBINARIES) $(CXXBINARIES)
 	@$(ECHO) compiling $(EXE)
-	@$(CC) -o $(EXE) $(CFLAGS) $(BINARIES) -lncurses
+	@$(CXX) -o $(EXE) $(CXXFLAGS) $(BINARIES) -lncurses
+
+$(BIN)%.cpp.o: $(SRCS)%.cpp
+	@$(ECHO) compiling $<
+	@$(CXX) $(CXXFLAGS) -c $< -o $@
 
 $(BIN)%.o: $(SRCS)%.c $(OBJS)%.h
 	@$(ECHO) compiling $<

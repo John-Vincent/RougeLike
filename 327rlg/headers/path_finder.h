@@ -24,6 +24,10 @@ typedef enum{
   right,
 } direction_t;
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
 /**
  * finds the shortest path between two locations
  * @param  [name]                  array of hardness values
@@ -66,5 +70,9 @@ void deletePath(path_t p);
  * @date   2017-02-22T16:54:48+000
  */
 int can_see(uint8_t hardness[mapHeight][mapWidth], int x1, int y1, int x2, int y2);
+
+#ifdef __cplusplus
+  }
+#endif
 
 #endif

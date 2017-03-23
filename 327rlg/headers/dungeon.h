@@ -3,9 +3,13 @@
 
 #include <stdint.h>
 #include "constants.h"
-#include "character.h"
+#include "character_cpp.h"
 #include "map.h"
 #include "heap.h"
+
+#ifndef __cplusplus
+typedef void character;
+#endif
 
 #ifdef __cplusplus
 extern "C"{
@@ -15,13 +19,14 @@ extern "C"{
 typedef struct dungeon{
   uint8_t x;
   uint8_t y;
+  uint8_t look;
   uint8_t hardness[mapHeight][mapWidth];
+  uint8_t visited[mapHeight][mapWidth];
   char chars[mapHeight][mapWidth];
   uint16_t distances[mapHeight][mapWidth];
   uint16_t distances_notun[mapHeight][mapWidth];
   uint16_t distances_intel[mapHeight][mapWidth];
-  character_t *characters[mapHeight][mapWidth];
-  character_t *player;
+  character **characters;
   room_t *rooms;
   uint8_t numRooms;
   uint32_t num_characters;
@@ -30,7 +35,6 @@ typedef struct dungeon{
   heap_t *turn_order;
   char *message;
 } dungeon_t;
-
 
 
 /**
@@ -49,6 +53,7 @@ void free_mem(dungeon_t *dungeon);
  * @date   2017-03-06T22:24:42+000
  */
 int init_dungeon(dungeon_t **dungeon, int nummon);
+
 
 #ifdef __cplusplus
 }

@@ -1,15 +1,4 @@
-for this assignment i used a linked list to connect the different floors in the dungeon,
- a heap for each floors turn order, and an array for each floors character list. each
- floor stores pointers to its own data, so when moving to each floor the status of the
- everything on the floor is preserved. When the player dies the game is stuck in Look
- Mode until the user closes the program. the starting floor has no up staircase only
- a descending one. Each floor below has one more monster than the floor above, making
- the game more difficult as you progress. when the play goes down a floor they start
- on top of the upwards stair case.
-
- AMENDMENT
-  During lecture i was told that i was required to have stairs going both up
-  and down on the first floor, so i altered my program, it now randomly places
-  both stairs on the players first visit to any floor. However when the PC
-  returns to a floor then will apear on the stairs they took previously. So i have
-  semi connected floors.
+For this assignent i added the character.cpp npc.cpp and pc.cpp classes to the project and
+programed my project to interface with the new c++ classes.
+i also added another 2d array that keeps track of what locations the PC has visited.
+i also added a check to make sure that the NPC's are within 5 tiles away from the PC before they are rendered.

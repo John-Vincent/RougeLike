@@ -4,7 +4,10 @@
 #include "constants.h"
 #include "dungeon.h"
 
-#define turnbias 1000
+
+#ifdef __cplusplus
+  extern "C" {
+#endif
 
 /**
  * this displays the dungeon with all its characters to the ncurses screen
@@ -25,7 +28,8 @@ void display(dungeon_t *dungeon);
 int run_game(dungeon_t *dungeon);
 
 
-
-
+#ifdef __cplusplus
+  }
+#endif
 
 #endif

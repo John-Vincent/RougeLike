@@ -10,6 +10,11 @@
 #include "constants.h"
 #include "map.h"
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
+
 /**
  * saves the current game map with the following rules
  * byte range         data contents
@@ -37,5 +42,8 @@ int saveMap(uint8_t numRooms, room_t const *rooms, uint8_t map_hard[mapHeight][m
  */
 int loadMap(room_t **rooms, uint8_t *numRooms, uint8_t map_hard[mapHeight][mapWidth]);
 
+#ifdef __cplusplus
+  }
+#endif
 
 #endif
