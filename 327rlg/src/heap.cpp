@@ -171,7 +171,7 @@ static heap_node_t *insert_vertex(heap_t *h, void *v){
   heap_node_t *p;
   uint32_t t;
 
-  n = calloc(1, sizeof (*n));
+  n = (heap_node_t*)calloc(1, sizeof (*n));
 
   n->data = v;
   if(h->top == NULL){
@@ -190,7 +190,7 @@ static heap_node_t *insert_vertex(heap_t *h, void *v){
 }
 
 void init_heap(heap_t **h, int32_t (*compare)(void*, void*)){
-  *h = calloc(1, sizeof (heap_t));
+  *h = (heap_t *)calloc(1, sizeof (heap_t));
   (*h)->compare = compare;
   (*h)->clear = &clear_heap;
   (*h)->insert = &insert_vertex;

@@ -1,0 +1,169 @@
+#ifndef DUNGEONCPP_H
+#define DUNGEONCPP_H
+
+#include <stdint.h>
+#include <iostream>
+#include "constants.h"
+#include "map.h"
+#include "path_finder.h"
+#include "character"
+#include "heap.h"
+#include "gameio.h"
+
+
+
+class Dungeon{
+private:
+  Dungeon(int nummon){
+    curlev = top = new level(nummon, 0);
+  }
+  static Dungeon *d_instance;
+  Dungeon &operator=(Dungeon const&);
+  Dungeon(Dungeon const&);
+
+  class level{
+  public:
+    level(int nummon, int up_stairs);
+    ~level();
+    uint8_t x;
+    uint8_t y;
+    uint8_t look;
+    uint8_t hardness[mapHeight][mapWidth];
+    uint8_t visited[mapHeight][mapWidth];
+    char chars[mapHeight][mapWidth];
+    uint16_t distances[mapHeight][mapWidth];
+    uint16_t distances_notun[mapHeight][mapWidth];
+    uint16_t distances_intel[mapHeight][mapWidth];
+    character **characters;
+    room_t *rooms;
+    uint8_t numRooms;
+    uint32_t num_characters;
+    level *upstairs;
+    level *downstairs;
+    heap *turn_order;
+    char *message;
+  };
+
+  level *curlev;
+  level *top;
+
+public:
+
+  ~Dungeon();
+
+  static void init_dungeon(int nummon);
+
+  static Dungeon *get_instance();
+
+  char get_char_sym(int x, int y);
+
+  inline void center_map(){
+    curlev->x = curlev->characters[0]->x;
+    curlev->y = curlev->characters[0]->y;
+  }
+
+  inline char &get_environment(int x, int y){
+    return curlev->chars[y][x];
+  }
+
+  inline char *&get_message(){
+      return curlev->message;
+  }
+
+  inline heap_t *get_turns(){
+    return curlev->turn_order;
+  }
+
+  inline uint8_t &get_x(){
+    return curlev->x;
+  }
+
+  inline uint8_t &get_y(){
+    return curlev->y;
+  }
+
+  inline uint8_t &get_look(){
+    return curlev->look;
+  }
+
+  inline uint8_t &get_hardness(int x, int y){
+    return curlev->hardness[y][x];
+  }
+
+  inline uint8_t &visited(int x, int y){
+    return curlev->visited[y][x];
+  }
+
+  inline character *get_character(unsigned int i){
+    if(i < curlev->num_characters && i >= 0){
+      return curlev->characters[i];
+    }
+    return NULL;
+  }
+
+  uint16_t *get_distance_array(const unsigned int attrib){
+    if(attrib & intelligent){
+      if(attrib & tunneler)
+        return *curlev->distances_intel;
+      else
+        return *curlev->distances_notun;
+    }
+    else{
+      return *curlev->distances;
+    }
+  }
+
+  int can_see_player(int x, int y){
+    return can_see(curlev->hardness, curlev->characters[0]->x, curlev->characters[0]->y, x, y);
+  }
+
+  inline uint32_t get_num_characters(){
+    return curlev->num_characters;
+  }
+
+  room_t *get_room(int i){
+    if(i < curlev->numRooms && i <= 0){
+      return curlev->rooms + i;
+    }
+    return NULL;
+  }
+
+  inline uint8_t &get_num_rooms(){
+    return curlev->numRooms;
+  }
+
+  int save(){
+    if(saveMap(curlev->numRooms, curlev->rooms, curlev->hardness)){
+      printf("failed to save map\n");
+      return -1;
+    }
+    std::cout << "map saved" << std::endl;
+    return 0;
+  }
+
+  int load(){
+    if(loadMap(&curlev->rooms, &curlev->numRooms,  curlev->hardness)){
+      return -1;
+    }
+
+    init_map_char(curlev->chars);
+    drawMap(curlev->hardness, curlev->chars, curlev->rooms, curlev->numRooms);
+    return 0;
+  }
+
+  int go_upstairs();
+
+  int visible(int x, int y);
+
+  int go_downstairs();
+
+  void calculate_distances();
+
+  void generate_characters();
+
+};
+
+
+
+
+#endif

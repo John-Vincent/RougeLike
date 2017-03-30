@@ -2,12 +2,8 @@
 #define RLGDES_H
 
 #include "constants.h"
-#include "dungeon.h"
+#include "dungeon"
 
-
-#ifdef __cplusplus
-  extern "C" {
-#endif
 
 /**
  * this displays the dungeon with all its characters to the ncurses screen
@@ -15,7 +11,7 @@
  * @author Collin Vincent <collinvincent96@gmail.com>
  * @date   2017-03-05T20:15:47+000
  */
-void display(dungeon_t *dungeon);
+void display();
 
 
 /**
@@ -25,11 +21,7 @@ void display(dungeon_t *dungeon);
  * @author Collin Vincent <collinvincent96@gmail.com>
  * @date   2017-03-05T20:16:29+000
  */
-int run_game(dungeon_t *dungeon);
+int run_game();
 
-
-#ifdef __cplusplus
-  }
-#endif
 
 #endif

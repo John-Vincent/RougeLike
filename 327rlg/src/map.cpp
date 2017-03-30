@@ -187,7 +187,7 @@ void printDistances(uint16_t distances[mapHeight][mapWidth], uint8_t hardness[ma
 }
 
 
-int generateMap(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][mapWidth], room_t **rooms, uint8_t *room_count){
+int generateMap(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][mapWidth], room_t **rooms, uint8_t *room_count, uint8_t stairs){
   init_map_char(map_char);
 
   //assigns hardness value to all areas in the map
@@ -196,7 +196,7 @@ int generateMap(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][
   //generates all the rooms
   *room_count = rand()% Room_Number_Range + Room_Min_Number;
   int numRooms = *room_count;
-  if(!(*rooms = malloc((sizeof (**rooms)) * numRooms))){
+  if(!(*rooms =(room_t *) malloc((sizeof (**rooms)) * numRooms))){
       return -1;
   }
   if(generateRooms(*rooms, numRooms)){
@@ -206,6 +206,6 @@ int generateMap(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][
   //set the hardness of map array to 0 to create paths between rooms
   connect_rooms(map_hard, *rooms, numRooms);
   drawMap(map_hard, map_char, *rooms, numRooms);
-  place_stairs(map_char, *rooms, *room_count, 1, 1);
+  place_stairs(map_char, *rooms, *room_count, stairs, 1);
   return 0;
 }

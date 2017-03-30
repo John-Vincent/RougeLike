@@ -92,7 +92,7 @@ void printDistances(uint16_t distances[mapHeight][mapWidth], uint8_t hardness[ma
  * @author Collin Vincent <collinvincent96@gmail.com>
  * @date   2017-02-01T16:22:56+000
  */
-int generateMap(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][mapWidth], room_t **rooms, uint8_t *room_count);
+int generateMap(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][mapWidth], room_t **rooms, uint8_t *room_count, uint8_t stairs);
 
 /**
  * randomly places a '<' and/or '>' in the character array. they are garrentied to be within one

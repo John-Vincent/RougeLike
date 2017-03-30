@@ -17,7 +17,7 @@
 int getPath(char *file_path);
 
 int saveMap(uint8_t numRooms, room_t const *rooms, uint8_t map_hard[mapHeight][mapWidth]){
-  char *file_marker = "RLG327-S2017";
+  const char *file_marker = "RLG327-S2017";
   uint32_t version = 0;
   uint32_t size = 16820 + (sizeof (*rooms) * numRooms);
 
@@ -94,7 +94,7 @@ int loadMap(room_t **rooms, uint8_t *numRooms, uint8_t map_hard[mapHeight][mapWi
   }
 
   *numRooms = (size - 16820)/(sizeof (**rooms));
-  *rooms = malloc(sizeof (**rooms) * (*numRooms));
+  *rooms = (room_t*)malloc(sizeof (**rooms) * (*numRooms));
   if(*rooms == NULL){
     printf("failed to allocate space for room data\nerror: %s\n", strerror(errno));
     return -1;

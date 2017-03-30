@@ -7,10 +7,8 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
-#include "dungeon.h"
+#include "dungeon"
 #include "map.h"
-#include "gameio.h"
-#include "character_cpp.h"
 #include "des.h"
 
 #define default_monster_num 10;

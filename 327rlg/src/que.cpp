@@ -4,7 +4,7 @@
 
 
 static void add(que_t *q, void *d){
-  que_link_t *n = calloc(1, sizeof (que_link_t));
+  que_link_t *n = (que_link_t*)calloc(1, sizeof (que_link_t));
   n->data = d;
   if(!(q->size)){
     q->bottom = n;
@@ -33,7 +33,7 @@ static void *pop(que_t *q){
 }
 
 void init_que(que_t **q){
-  *q = calloc(1, sizeof (**q));
+  *q = (que_t*)calloc(1, sizeof (**q));
   (*q)->add = &add;
   (*q)->pop = &pop;
 }

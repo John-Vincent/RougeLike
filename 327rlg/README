@@ -1,4 +1,4 @@
-For this assignent i added the character.cpp npc.cpp and pc.cpp classes to the project and
-programed my project to interface with the new c++ classes.
-i also added another 2d array that keeps track of what locations the PC has visited.
-i also added a check to make sure that the NPC's are within 5 tiles away from the PC before they are rendered.
+i parse the monster_desc.txt file and store the resulting data into a monster_template class, which uses a dice class to store
+any values that need to be rolled for. after parsing the monster i add the monster_template to a single linked list which is
+stored in my character_creator class. The character_creator has an unfinished method that will allow me to generate an npc object
+from any of the templates.

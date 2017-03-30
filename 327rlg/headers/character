@@ -1,0 +1,51 @@
+#ifndef CPPCHARACTER
+#define CPPCHARACTER
+
+
+#include "constants.h"
+#include <stdint.h>
+#include <stdlib.h>
+
+
+
+class character{
+  protected:
+    int gen;
+  public:
+    char sym;
+    int speed;
+    int next_turn;
+    unsigned int attrib;
+    int x;
+    int y;
+    inline const int get_gen() const{
+      return gen;
+    }
+    virtual int take_turn(int input) = 0;
+    virtual ~character(){}
+    uint32_t is_dead(){
+      return attrib == 0xffffffff;
+    }
+    int compare(const character &other) const;
+};
+
+class npc : public character{
+  public:
+    npc(int gen);
+    ~npc(){}
+    int take_turn(int input);
+};
+
+class pc : public character{
+  public:
+    pc();
+    ~pc(){}
+    int take_turn(int input);
+};
+
+
+
+int compare_characters(void *child, void *parent);
+
+
+#endif

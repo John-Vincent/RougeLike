@@ -3,10 +3,6 @@
 
 #include <stdint.h>
 
-#ifdef __cplusplus
-  extern "C" {
-#endif
-
 typedef struct heap{
   struct heap_node *top;
   int32_t (*compare)(void*, void*);
@@ -27,9 +23,5 @@ typedef struct heap{
 void init_heap(heap_t **h, int32_t (*compare)(void*, void*));
 
 void clear_heap(heap_t *h);
-
-#ifdef __cplusplus
-  }
-#endif
 
 #endif

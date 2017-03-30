@@ -1,24 +1,28 @@
-#include "../headers/character_cpp.h"
+#include "../headers/character"
 #include "../headers/path_finder.h"
+#include "../headers/dungeon"
 
 #define look_scroll 5
 
-pc::pc(dungeon_t *dungeon){
+pc::pc(){
+  Dungeon *dungeon;
   int j, i;
   room_t *r;
 
+  dungeon = Dungeon::get_instance();
+  r = dungeon->get_room(0);
+
   this->speed = 10;
-  this->attrib = 0x1F;
+  this->attrib = 0xFF;
   this->gen = 0;
   this->next_turn = 0;
-  this->dungeon = dungeon;
-  r = dungeon->rooms + (rand() % dungeon->numRooms);
-  this->x = dungeon->x =rand() % r->width + r->xPos;
-  this->y = dungeon->y = rand() % r->height + r->yPos;
-  for(i = this->y-torch_distance; i < this->y + 1 + torch_distance; i++){
-    for(j = this->x-torch_distance; j < this->x + 1 + torch_distance; j++){
+  r = r + (rand() % dungeon->get_num_rooms());
+  this->x = dungeon->get_x() =rand() % r->width + r->xPos;
+  this->y = dungeon->get_y() = rand() % r->height + r->yPos;
+  for(i = this->y - torch_distance; i < this->y + 1 + torch_distance; i++){
+    for(j = this->x - torch_distance; j < this->x + 1 + torch_distance; j++){
       if(j > 0 && j < mapWidth && i > 0 && i < mapHeight){
-        dungeon->visited[i][j] = 1;
+        dungeon->visited(j,i) = 1;
       }
     }
   }
@@ -26,93 +30,98 @@ pc::pc(dungeon_t *dungeon){
 }
 
 int pc::take_turn(int input){
-  int x = 0, y = 0, look = dungeon->look;
+  Dungeon *dungeon;
+  character *c;
+  int x = 0, y = 0, look;
   int i, j;
   unsigned int k;
+
+  dungeon = Dungeon::get_instance();
+  look = dungeon->get_look();
 
   switch(input){
     // 7 || y
     case '7':
     case 'y':
       if(!look){
-        x = dungeon->characters[0]->x - 1;
-        y = dungeon->characters[0]->y - 1;
+        x = this->x - 1;
+        y = this->y - 1;
       }
       break;
     // 8 || k
     case '8':
     case 'k':
       if(!look){
-        x = dungeon->characters[0]->x;
-        y = dungeon->characters[0]->y - 1;
+        x = this->x;
+        y = this->y - 1;
       }else{
-        x = dungeon->x;
-        y = dungeon->y - look_scroll;
+        x = dungeon->get_x();
+        y = dungeon->get_y() - look_scroll;
       }
       break;
     // 9 || u
     case '9':
     case 'u':
       if(!look){
-        x = dungeon->characters[0]->x + 1;
-        y = dungeon->characters[0]->y - 1;
+        x = this->x + 1;
+        y = this->y - 1;
       }
       break;
     // 6 || l
     case '6':
     case 'l':
       if(!look){
-        x = dungeon->characters[0]->x + 1;
-        y = dungeon->characters[0]->y;
+        x = this->x + 1;
+        y = this->y;
       }else{
-        x = dungeon->x + look_scroll;
-        y = dungeon->y;
+        x = dungeon->get_x() + look_scroll;
+        y = dungeon->get_y();
       }
       break;
     // 3 || n
     case 'n':
     case '3':
       if(!look){
-        x = dungeon->characters[0]->x + 1;
-        y = dungeon->characters[0]->y + 1;
+        x = this->x + 1;
+        y = this->y + 1;
       }
       break;
     // 2 || j
     case '2':
     case 'j':
       if(!look){
-        x = dungeon->characters[0]->x;
-        y = dungeon->characters[0]->y + 1;
+        x = this->x;
+        y = this->y + 1;
       }else{
-        x = dungeon->x;
-        y = dungeon->y + look_scroll;
+        x = dungeon->get_x();
+        y = dungeon->get_y() + look_scroll;
       }
       break;
     // 1 || b
     case '1':
     case 'b':
       if(!look){
-        x = dungeon->characters[0]->x - 1;
-        y = dungeon->characters[0]->y + 1;
+        x = this->x - 1;
+        y = this->y + 1;
       }
       break;
     // 4 || h
     case '4':
     case 'h':
       if(!look){
-        x = dungeon->characters[0]->x - 1;
-        y = dungeon->characters[0]->y;
+        x = this->x - 1;
+        y = this->y;
       }else{
-        x = dungeon->x - look_scroll;
-        y = dungeon->y;
+        x = dungeon->get_x() - look_scroll;
+        y = dungeon->get_y();
       }
       break;
     // 5 || space
     case '5':
     case ' ':
       if(!look){
-        x = dungeon->characters[0]->x;
-        y = dungeon->characters[0]->y;
+        x = this->x;
+        y = this->y;
       }
       break;
 
@@ -124,26 +133,25 @@ int pc::take_turn(int input){
 
   if(!look){
 
-    if(!dungeon->hardness[y][x]){
+    if(!dungeon->get_hardness(x, y)){
 
-      for(k = 0; k < dungeon->num_characters; k++) {
-        if(dungeon->characters[k]->x == x && dungeon->characters[k]->y == y && dungeon->characters[k] != this){
-          dungeon->characters[k]->attrib = 0xFFFFFFFF;
+      for(k = 0; k < dungeon->get_num_characters(); k++) {
+        c = dungeon->get_character(k);
+        if(c->x == x && c->y == y && c != this){
+          c->attrib = 0xFFFFFFFF;
         }
       }
 
-      dungeon->characters[0]->x = dungeon->x = x;
-      dungeon->characters[0]->y = dungeon->y = y;
+      this->x = dungeon->get_x() = x;
+      this->y = dungeon->get_y() = y;
       for(i = this->y-torch_distance; i < this->y+torch_distance; i++){
         for(j = this->x-torch_distance; j < this->x + torch_distance; j++){
           if(j > 0 && j < mapWidth && i > 0 && i < mapHeight){
-            dungeon->visited[i][j] = 1;
+            dungeon->visited(j, i) = 1;
           }
         }
       }
-      find_distances(dungeon->hardness, dungeon->distances, x, y, 0, 1);
-      find_distances(dungeon->hardness, dungeon->distances_intel, x, y, 1, 1);
-      find_distances(dungeon->hardness, dungeon->distances_notun, x, y, 1, 0);
+      dungeon->calculate_distances();
     } else{
       return 1;
     }
@@ -160,8 +168,8 @@ int pc::take_turn(int input){
     else if(y > mapHeight - (screen_height >> 1))
       y = mapHeight - (screen_height >> 1);
 
-    dungeon->x = x;
-    dungeon->y = y;
+    dungeon->get_x() = x;
+    dungeon->get_y() = y;
 
   }
 

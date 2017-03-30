@@ -9,7 +9,7 @@ typedef struct vertex{
   uint8_t x;
   uint8_t hard;
   int32_t dist;
-  void *heap;
+  struct heap_node *heap;
   struct vertex *up;
   struct vertex *down;
   struct vertex *left;
@@ -84,7 +84,7 @@ path_t find_shortest_path(uint8_t hardness[mapHeight][mapWidth], uint8_t start_x
 
   p.dist = u->dist;
   while(u){
-    pn = calloc(1, sizeof(*pn));
+    pn = (path_node_t*)calloc(1, sizeof(*pn));
     pn->x = u->x;
     pn->y = u->y;
     pn->next = n;

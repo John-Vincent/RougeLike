@@ -164,3 +164,28 @@ February 13, 1:30-23:00 :
     -added a check to see if NPC's are within 5 blocks of the PC before printing them to the screen
     -added a check to make sure the visited array value is 1 before printing a environment character to the screen.
 ---------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------Assignment 1.07----------------------------------------------------------------------------------------
+  March 27, 5:00pm - 10:00pm  :
+    -changed all the file extensions to .cpp
+    -started work on converting the dungeon struct to a dungeon class with an internal class named level
+
+
+ March 28, 6:00pm - 10:00pm   :
+   -worked on the dungeon class
+
+ March 29, 1:00pm - 2:30pm    :
+   -finished debugging the dungeon class, now it works as it did previously
+   -used A_BOLD to highlight the area of the map the the play can see currently.
+
+  March 29, 4:00pm - 2:00am    :
+    -added the mon_file_parser head which contains every class needed for the parsing
+    -added the dice class
+    -added the monster_template class
+    -added the character_creator class
+    -added the template_holder class inside character_creator
+    -coded all the functions
+    -found bug where i had the wrong file name
+    -found bug where i was trying to use strcat with getenv("HOME") as the first argument
+    -found bug where if i started parsing a monster that was invalid since i used the same template object for the next monster
+        some of the members of the template where lost, causing a memory leak (thanks valgrind)
+    -found bug where i called set_dam instead of set_hp so i was never setting the hp of the template causing it to think the template was invalid
