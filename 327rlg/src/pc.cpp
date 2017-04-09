@@ -12,6 +12,11 @@ pc::pc(){
   dungeon = Dungeon::get_instance();
   r = dungeon->get_room(0);
 
+  color = GREEN;
+  sym = '@';
+  hp = 10;
+  name = "YOU";
+  desc = "a loser";
   this->speed = 10;
   this->attrib = 0xFF;
   this->gen = 0;
@@ -32,9 +37,10 @@ pc::pc(){
 int pc::take_turn(int input){
   Dungeon *dungeon;
   character *c;
+  item *it;
+  std::string str;
   int x = 0, y = 0, look;
   int i, j;
-  unsigned int k;
 
   dungeon = Dungeon::get_instance();
   look = dungeon->get_look();
@@ -135,15 +141,23 @@ int pc::take_turn(int input){
 
     if(!dungeon->get_hardness(x, y)){
 
-      for(k = 0; k < dungeon->get_num_characters(); k++) {
-        c = dungeon->get_character(k);
-        if(c->x == x && c->y == y && c != this){
-          c->attrib = 0xFFFFFFFF;
-        }
+      c = dungeon->get_character(x, y);
+      if(c && c != this){
+        str = "you kill a ";
+        str += c->get_name();
+        dungeon->set_message(str);
+        c->attrib = 0xFFFFFFFF;
       }
 
+      it = dungeon->get_item(x, y);
+      if(it){
+        dungeon->set_message(it->get_name());
+      }
+
+      dungeon->set_character(this->x, this->y, NULL);
       this->x = dungeon->get_x() = x;
       this->y = dungeon->get_y() = y;
+      dungeon->set_character(x, y, this);
       for(i = this->y-torch_distance; i < this->y+torch_distance; i++){
         for(j = this->x-torch_distance; j < this->x + torch_distance; j++){
           if(j > 0 && j < mapWidth && i > 0 && i < mapHeight){

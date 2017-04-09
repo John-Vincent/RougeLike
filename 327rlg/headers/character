@@ -5,14 +5,21 @@
 #include "constants.h"
 #include <stdint.h>
 #include <stdlib.h>
-
+#include <string>
+#include "dice"
+#include "item"
 
 
 class character{
   protected:
     int gen;
+    std::string name;
+    std::string desc;
   public:
     char sym;
+    dice dam;
+    int hp;
+    int color;
     int speed;
     int next_turn;
     unsigned int attrib;
@@ -27,11 +34,19 @@ class character{
       return attrib == 0xffffffff;
     }
     int compare(const character &other) const;
+
+    std::string get_name(){
+      return name;
+    }
+
+    std::string get_desc(){
+      return desc;
+    }
 };
 
 class npc : public character{
   public:
-    npc(int gen);
+    npc(std::string name, std::string desc, int gen, int speed, dice dam, int hp, char sym, int attrib, int color);
     ~npc(){}
     int take_turn(int input);
 };

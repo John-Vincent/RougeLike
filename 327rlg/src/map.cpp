@@ -7,6 +7,8 @@
 int generateRooms(room_t *rooms, uint8_t numRooms){
   int i, j, d = 1, distx, disty, c;
 
+  c = 0;
+
   //printf("----------Rooms----------\nXpos, Ypos, Width, Height\n");
   for(i = 0; i<numRooms; i++){
     rooms[i].width = rand() % Room_Width_Range + Room_Min_Width;

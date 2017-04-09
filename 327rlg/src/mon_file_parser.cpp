@@ -31,84 +31,51 @@ void monster_template::set_ability(std::string a){
 }
 
 monster_template::~monster_template(){
-  if(name){
-    delete name;
-  }
-  if(desc){
-    delete desc;
-  }
-  if(color){
-    delete color;
-  }
-  if(speed)
+  if(speed){
     delete speed;
-  if(hp)
-    delete hp;
-  if(dam)
-    delete dam;
-}
-
-monster_template *character_creator::get_template(int x){
-  return NULL;
-}
-
-int character_creator::add_template(monster_template *temp){
-  template_holder *c;
-  c = head;
-
-  if(c){
-    while(c->next){
-      c = c->next;
-    }
-    c->next = new template_holder(temp);
-    if(!c->next){
-      return -1;
-    }
-  }else{
-    head = new template_holder(temp);
-    if(!head){
-      return -1;
-    }
   }
+  if(hp){
+    delete hp;
+  }
+  if(dam){
+    delete dam;
+  }
+}
 
-  return 0;
+npc *monster_template::generate(int gen){
+  return new npc(name, desc, gen, speed->roll(), *dam, hp->roll(), symb, ability, color);
 }
 
 character_creator::~character_creator(){
-  template_holder *c, *n;
-
-  c = head;
-
-  while(c){
-    n = c->next;
-    delete c;
-    c = n;
+  while(!list.empty()){
+    delete list.back();
+    list.pop_back();
   }
-
 }
 
 //todo
-int character_creator::get_monster(int x, npc &n){
-  return 0;
+npc *character_creator::get_monster(int gen){
+  int x;
+  x = rand() % templates;
+  return list[x]->generate(gen);
 }
 
-character_creator *read_character_file(){
+character_creator::character_creator(){
   std::string line, arg;
-  char *f_path = getenv("HOME");
+  char f_path[100];
+  strcpy(f_path, getenv("HOME"));
   strcat(f_path, "/.rlg327/monster_desc.txt");
   std::ifstream in(f_path);
-  character_creator *creator;
   monster_template *temp;
   int invalid, n, sy, c, de, sp, da, h, a, v1, v2, v3;
 
-  creator = new character_creator();
   temp = new monster_template();
   invalid = n = sy = c = de = sp = da = h = a = 0;
 
   std::getline(in, line);
 
   if(line != "RLG327 MONSTER DESCRIPTION 1")
-    return NULL;
+    throw "wrong file";
 
   while(std::getline(in, line)){
     if(line == "BEGIN MONSTER"){
@@ -197,7 +164,8 @@ character_creator *read_character_file(){
         }
       }
       if(!invalid && temp->is_set()){
-        creator->add_template(temp);
+        list.push_back(temp);
+        templates++;
         temp = new monster_template();
       }
       invalid = n = sy = c = de = sp = da = h = a = 0;
@@ -206,14 +174,13 @@ character_creator *read_character_file(){
 
   in.close();
   delete temp;
-  return creator;
 }
 
 void monster_template::print_out(){
-  std::cout << "Name: " << *name << std::endl;
+  std::cout << "Name: " << name << std::endl;
   std::cout << "Symbol: " << symb << std::endl;
-  std::cout << "Description: " << *desc;
-  std::cout << "Color: " << *color << std::endl;
+  std::cout << "Description: " << desc;
+  std::cout << "Color: " << color << std::endl;
   std::cout << "Speed: " << speed->to_string() << std::endl;
   std::cout << "Abilities: ";
   if(ability & intelligent)
@@ -236,13 +203,9 @@ void monster_template::print_out(){
 }
 
 void character_creator::print_out(){
-  template_holder *c;
+  std::vector<monster_template*>::iterator it;
 
-  c = head;
-
-  while(c){
-    c->print_out();
-    c = c->next;
+  for(it = list.begin(); it != list.end(); it++){
+    (*it)->print_out();
   }
-
 }

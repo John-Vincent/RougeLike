@@ -189,3 +189,22 @@ February 13, 1:30-23:00 :
     -found bug where if i started parsing a monster that was invalid since i used the same template object for the next monster
         some of the members of the template where lost, causing a memory leak (thanks valgrind)
     -found bug where i called set_dam instead of set_hp so i was never setting the hp of the template causing it to think the template was invalid
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------Assignment 1.08-------------------------------------------------------------------------------------------
+
+  April 4, 20:00 - 24:00 :
+    -worked on item parsing
+
+  April 5, 19:00 - 3:00  :
+    - finished item parsing
+    - found bug with vector and item * where i was getting double free's
+    - added changes to dungeon to allow the messages to be displayed and the items to be stored in the level
+    - also reverted back to a character matrix but this time with only a pointer to player and no other characters
+    - changed memory deallocation to allow freeing characters after they are removed from the matrix
+    - found bug with double delete of player when he was still in the map
+    - added item generation from parsed templates
+    - added npc generate from parsed templates
+    - added item_creator and monster_creator to dungeon so they are auto allocated and deallocated with the dungeon
+    - changed character generation to make items and use the creator's
+    - changed how the character to print is calculated.
+----------------------------------------------------------------------------------------------------------------------------------------------------------

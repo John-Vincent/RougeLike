@@ -13,7 +13,7 @@ SRCS = ./src/
 CBINARIES = $(addprefix $(BIN), main map gameio path_finder que heap des dungeon)
 CBINARIES := $(addsuffix .o, $(CBINARIES))
 
-CXXBINARIES = $(addprefix $(BIN), character npc pc main map gameio path_finder que heap des dungeon mon_file_parser)
+CXXBINARIES = $(addprefix $(BIN), character npc pc main map gameio path_finder que heap des dungeon mon_file_parser item_file_parser)
 CXXBINARIES := $(addsuffix .cpp.o, $(CXXBINARIES))
 
 CXXHEADERS  = $(addprefix $(SRC), character constants.h des.h dungeon gameio.h heap.h main.h map.h)

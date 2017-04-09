@@ -1,0 +1,89 @@
+#ifndef ITEMCPP
+#define ITEMCPP
+
+#include <string>
+
+
+class item{
+private:
+  std::string name;
+  std::string desc;
+  int type;
+  int color;
+  dice dam;
+  int hit;
+  int dodge;
+  int def;
+  int weight;
+  int speed;
+  int attr;
+  int val;
+public:
+  item(std::string n, std::string d, int t, int c, int h, dice da, int dod, int def, int we, int s, int a, int v){
+    name = n;
+    desc = d;
+    type = t;
+    color = c;
+    dam = da;
+    hit = h;
+    dodge = dod;
+    this->def = def;
+    weight = we;
+    speed = s;
+    attr = a;
+    val = v;
+  }
+  ~item(){}
+
+  std::string get_name(){
+    return name;
+  }
+
+  std::string get_desc(){
+    return desc;
+  }
+
+  int get_type(){
+    return type;
+  }
+
+  int get_color(){
+    return color;
+  }
+
+  int get_dam(){
+    return dam.roll();
+  }
+
+  int get_hit(){
+    return hit;
+  }
+
+  int get_dodge(){
+    return dodge;
+  }
+
+  int get_def(){
+    return def;
+  }
+
+  int get_weight(){
+    return weight;
+  }
+
+  int get_speed(){
+    return speed;
+  }
+
+  int get_attr(){
+    return attr;
+  }
+
+  int get_val(){
+    return val;
+  }
+};
+
+
+
+#endif

@@ -1,13 +1,13 @@
+#include <iostream>
 #include "../headers/main.h"
 #include "../headers/mon_file_parser"
+#include "../headers/item_file_parser"
 
 
 
 int main(int argc, char const *argv[]) {
 
-  //Dungeon *dungeon;
-
-  character_creator *c;
+  Dungeon *dungeon;
 
   int seed = 0;
 
@@ -21,10 +21,8 @@ int main(int argc, char const *argv[]) {
   //initalize random number generator and map matrix
   initRandom(seed);
 
-  /*
-  Dungeon::init_dungeon(nummon);
 
-  dungeon = Dungeon::get_instance();
+  dungeon = Dungeon::get_instance(nummon);
 
   if(mode == GENERATE){
 
@@ -49,19 +47,12 @@ int main(int argc, char const *argv[]) {
 
   }
 
-  dungeon->generate_characters();
+  dungeon->fill_level();
 
 
  run_game();
 
  delete dungeon;
- */
-
- c = read_character_file();
-
- c->print_out();
-
- delete c;
 
  return 0;
 }

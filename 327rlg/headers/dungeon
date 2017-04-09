@@ -3,10 +3,14 @@
 
 #include <stdint.h>
 #include <iostream>
+#include <vector>
+#include "../headers/mon_file_parser"
+#include "../headers/item_file_parser"
 #include "constants.h"
 #include "map.h"
 #include "path_finder.h"
 #include "character"
+#include "item"
 #include "heap.h"
 #include "gameio.h"
 
@@ -14,9 +18,13 @@
 
 class Dungeon{
 private:
+  character_creator mc;
+  item_creator ic;
+
   Dungeon(int nummon){
     curlev = top = new level(nummon, 0);
   }
+
   static Dungeon *d_instance;
   Dungeon &operator=(Dungeon const&);
   Dungeon(Dungeon const&);
@@ -34,14 +42,16 @@ private:
     uint16_t distances[mapHeight][mapWidth];
     uint16_t distances_notun[mapHeight][mapWidth];
     uint16_t distances_intel[mapHeight][mapWidth];
-    character **characters;
+    character *characters[mapHeight][mapWidth];
+    item *items[mapHeight][mapWidth];
+    pc *player;
     room_t *rooms;
     uint8_t numRooms;
     uint32_t num_characters;
     level *upstairs;
     level *downstairs;
     heap *turn_order;
-    char *message;
+    std::string message;
   };
 
   level *curlev;
@@ -51,22 +61,20 @@ public:
 
   ~Dungeon();
 
-  static void init_dungeon(int nummon);
+  static Dungeon *get_instance(int nummon);
 
   static Dungeon *get_instance();
 
-  char get_char_sym(int x, int y);
-
   inline void center_map(){
-    curlev->x = curlev->characters[0]->x;
-    curlev->y = curlev->characters[0]->y;
+    curlev->x = curlev->player->x;
+    curlev->y = curlev->player->y;
   }
 
   inline char &get_environment(int x, int y){
     return curlev->chars[y][x];
   }
 
-  inline char *&get_message(){
+  inline std::string &get_message(){
       return curlev->message;
   }
 
@@ -94,13 +102,6 @@ public:
     return curlev->visited[y][x];
   }
 
-  inline character *get_character(unsigned int i){
-    if(i < curlev->num_characters && i >= 0){
-      return curlev->characters[i];
-    }
-    return NULL;
-  }
-
   uint16_t *get_distance_array(const unsigned int attrib){
     if(attrib & intelligent){
       if(attrib & tunneler)
@@ -114,7 +115,7 @@ public:
   }
 
   int can_see_player(int x, int y){
-    return can_see(curlev->hardness, curlev->characters[0]->x, curlev->characters[0]->y, x, y);
+    return can_see(curlev->hardness, curlev->player->x, curlev->player->y, x, y);
   }
 
   inline uint32_t get_num_characters(){
@@ -151,6 +152,32 @@ public:
     return 0;
   }
 
+  char for_print(int x, int y);
+
+  character *get_character(int x, int y);
+
+  character *get_player(){
+    return curlev->player;
+  }
+
+  item *get_item(int x, int y){
+    return curlev->items[y][x];
+  }
+
+  void remove_item(int x, int y){
+    if(curlev->items[y][x])
+      delete curlev->items[y][x];
+    curlev->items[y][x] = NULL;
+  }
+
+  void set_message(std::string a);
+
+  int get_life(){
+    return curlev->player->hp;
+  }
+
+  void set_character(int x, int y, character *c);
+
   int go_upstairs();
 
   int visible(int x, int y);
@@ -159,7 +186,7 @@ public:
 
   void calculate_distances();
 
-  void generate_characters();
+  void fill_level();
 
 };
 

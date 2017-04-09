@@ -1,44 +1,25 @@
 #include "../headers/character"
 #include "../headers/path_finder.h"
 #include "../headers/dungeon"
+#include "../headers/item"
 
-const struct{
-  uint8_t type;
-  char symbol;
-} character_lookup[] = {
-  {0x1F, '@'},
-  {0x00, 'I'}, //0000
-  {0x01, 'f'}, //0001
-  {0x02, 'a'}, //0010
-  {0x03, 'r'}, //0011
-  {0x04, '1'}, //0100
-  {0x05, 'j'}, //0101
-  {0x06, 'b'}, //0110
-  {0x07, '5'}, //0111
-  {0x08, 'V'}, //1000
-  {0x09, 'k'}, //1001
-  {0x0A, '&'}, //1010
-  {0x0B, '*'}, //1011
-  {0x0C, 'y'}, //1100
-  {0x0D, '+'}, //1101
-  {0x0E, '~'}, //1110
-  {0x0F, '$'}, //1111
-  {0xFF, ' '}
-};
 
-npc::npc(int gen){
+npc::npc(std::string name, std::string desc, int gen, int speed, dice dam, int hp, char sym, int attrib, int color){
   Dungeon *dungeon;
-  character *c;
   room_t* r;
   int a, x, y, flag;
-  int i;
 
   dungeon = Dungeon::get_instance();
   r = dungeon->get_room(0);
 
+  this->name = name;
+  this->sym = sym;
+  this->desc = desc;
   this->gen = gen;
-  this->speed = (rand() & 0xF) + 5;
-  this->attrib = (rand() & 0xF);
+  this->speed = speed;
+  this->dam = dam;
+  this->color = color;
+  this->attrib = (unsigned int) attrib;
   this->next_turn = 0;
   r = r + (rand() % dungeon->get_num_rooms());
   a = (r->width)*(r->height);
@@ -52,9 +33,8 @@ npc::npc(int gen){
       y = rand() % (mapHeight-2) + 1;
     }
     a--;
-    for(i = 0; i<gen; i++){
-      c = dungeon->get_character(i);
-      if(c && c->x == x && c->y == y)
+
+    if(dungeon->get_character(x, y)){
         flag = 1;
     }
   } while(flag);
@@ -62,14 +42,6 @@ npc::npc(int gen){
   this->x = x;
   this->y = y;
 
-  x = 0;
-  while(character_lookup[x].type != 0xFF){
-    if(character_lookup[x].type == this->attrib){
-      this->sym = character_lookup[x].symbol;
-      break;
-    }
-    x++;
-  }
 }
 
 
@@ -78,9 +50,11 @@ npc::npc(int gen){
 int npc::take_turn(int input){
   Dungeon *dungeon;
   character *c;
+  std::string str;
+  item *it;
   int x, y, rando, i, j;
   uint8_t hardness;
-  unsigned int k, dist;
+  unsigned int dist;
   uint16_t *distance;
   dist = 0x0FFFFFFF;
 
@@ -145,15 +119,28 @@ int npc::take_turn(int input){
     dungeon->calculate_distances();
   }
 
-  for(k = 0; k < dungeon->get_num_characters(); k++) {
-    c = dungeon->get_character(k);
-    if(c->x == x && c->y == y && c != this){
-      c->attrib = 0xFFFFFFFF;
+  c = dungeon->get_character(x, y);
+  if(c && c != this){
+    if(c == dungeon->get_player()){
+      str = "you where killed by a ";
+      str += this->name;
+      dungeon->set_message(str);
+      c->attrib = 0xffffffff;
+    } else{
+      c->x = this->x;
+      c->y = this->y;
     }
   }
 
+  it = dungeon->get_item(x, y);
+  if(this->attrib & dest && it){
+    dungeon->remove_item(x, y);
+  }
+
+  dungeon->set_character(this->x, this->y, NULL);
   this->x = x;
   this->y = y;
+  dungeon->set_character(x, y, this);
 
   return 0;
 

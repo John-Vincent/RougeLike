@@ -1,0 +1,41 @@
+#ifndef DICECPP
+#define DICECPP
+
+#include <string>
+#include <sstream>
+
+class dice{
+private:
+  int base;
+  int num;
+  int sides;
+public:
+
+  dice(){}
+
+  dice(const dice &d){
+    base = d.base;
+    num = d.num;
+    sides = d.sides;
+  }
+
+  dice(int b, int d, int s){
+    base = b;
+    num = d;
+    sides = s;
+  }
+
+  ~dice(){}
+
+  int roll(){
+    return (rand() % sides) * num + base;
+  }
+
+  std::string to_string(){
+    std::stringstream ss;
+    ss << base << '+' << num << 'd' << sides;
+    return ss.str();
+  }
+};
+
+#endif

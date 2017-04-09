@@ -26,6 +26,9 @@ int run_game(){
   init_pair(2, COLOR_GREEN, COLOR_BLACK);
   init_pair(3, COLOR_RED, COLOR_BLACK);
   init_pair(4, COLOR_YELLOW, COLOR_BLACK);
+  init_pair(5, COLOR_MAGENTA, COLOR_BLACK);
+  init_pair(6, COLOR_CYAN, COLOR_BLACK);
+  init_pair(7, COLOR_BLUE, COLOR_BLACK);
   cbreak();
   noecho();
   curs_set(0);
@@ -61,36 +64,37 @@ int run_game(){
         }
         break;
     }
-    if(!dungeon->get_look() && !dungeon->get_character(0)->is_dead() && running){
-      sprintf(temp, "input = %d, no action taken", input);
+    if(!dungeon->get_look() && !dungeon->get_player()->is_dead() && running){
+      sprintf(temp, "input = %c, no action taken", (char)input);
       dungeon->get_message() = temp;
-      if(!dungeon->get_character(0)->take_turn(input)){
+      if(!dungeon->get_player()->take_turn(input)){
         c = (character *)h->pop(h);
         c->next_turn += (turnbias / c->speed);
         h->insert(h, c);
 
-        while(h->peek(h) != dungeon->get_character(0)){
+        while(h->peek(h) != dungeon->get_player()){
           c = (character *)h->pop(h);
           if(!c->is_dead()){
             if(c->take_turn(input)){
-              dungeon->get_message() = (char*)"you lost!";
+
             }else{
-              sprintf(temp, "input = %d, player life = %d", input, 1);
+              sprintf(temp, "input = %c, player life = %d", (char)input, dungeon->get_life());
             }
             c->next_turn += (turnbias / c->speed);
             h->insert(h, c);
+          } else{
+            delete c;
           }
         }
       }
       display();
     } else if(running){
-      if(dungeon->get_character(0)->is_dead()){
-        dungeon->get_message() = (char *)"you lost!";
+      if(dungeon->get_player()->is_dead()){
         dungeon->get_look() = 1;
       }else{
         dungeon->get_message() = (char *)"LOOK MODE";
       }
-      dungeon->get_character(0)->take_turn(input);
+      dungeon->get_player()->take_turn(input);
       display();
     }
   }
@@ -123,34 +127,17 @@ void display(){
 
   for(j = 1; j< screen_height + 1; j++){
     for(i = 0; i< screen_width; i++){
-      symbol = dungeon->get_char_sym(x+i, y+j);
-      if(symbol){
-        if(symbol == '@')
-          attron(COLOR_PAIR(2));
-        else
-          attron(COLOR_PAIR(3));
-        mvprintw(j, i, "%c", symbol);
-      } else if(dungeon->visited(x+i, y+j) == 1){
-        if(dungeon->get_environment(x+i, y+j) == '<' || dungeon->get_environment(x+i, y+j) == '>')
-          attron(COLOR_PAIR(4));
-        else if(dungeon->visible(x+i, y+j)){
-          attron(COLOR_PAIR(1));
-        }else{
-          attron(COLOR_PAIR(1));
-          attroff(A_BOLD);
-        }
-        mvprintw(j, i, "%c", dungeon->get_environment(x+i, y+j));
-      }
-      attron(A_BOLD);
+      symbol = dungeon->for_print(x+i, y+j);
+      mvprintw(j, i, "%c", symbol);
     }
   }
 
   for(i = 0; i< screen_width; i++){
     mvprintw(0, i, " ");
   }
-  if(dungeon->get_message()){
-    mvprintw(0, screen_width/2 - strlen(dungeon->get_message())/2, "%s", dungeon->get_message());
+  if(dungeon->get_message() != ""){
+    mvprintw(0, screen_width/2 - dungeon->get_message().length()/2, "%s", dungeon->get_message().c_str());
   }
   refresh();
-  dungeon->get_message() = NULL;
+  dungeon->get_message() = "";
 }

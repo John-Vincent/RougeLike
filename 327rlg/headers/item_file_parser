@@ -1,0 +1,87 @@
+#ifndef IFILEPARSECPP
+#define IFILEPARSECPP
+
+#include <string>
+#include <sstream>
+#include <vector>
+#include "dice"
+#include "item"
+
+class item_template{
+private:
+  std::string name;
+  std::string desc;
+  int color;
+  int type;
+  dice *hit;
+  dice *dam;
+  dice *dodge;
+  dice *def;
+  dice *weight;
+  dice *speed;
+  dice *attribute;
+  dice *val;
+public:
+  item_template();
+
+  ~item_template();
+
+  void set_name(std::string n);
+
+  void set_desc(std::string d);
+
+  void set_color(std::string c);
+
+  void set_type(std::string t);
+
+  void set_hit(std::string);
+
+  void set_dam(std::string);
+
+  void set_dodge(std::string);
+
+  void set_def(std::string);
+
+  void set_weight(std::string);
+
+  void set_speed(std::string);
+
+  void set_attrib(std::string);
+
+  void set_val(std::string);
+
+  item *generate();
+
+  int is_set(){
+    return (name != "" && desc != "" && color && type && hit && dam && dodge && def && weight && speed && attribute && val);
+  }
+
+  void print_out();
+
+};
+
+
+class item_creator{
+private:
+
+  std::vector<item_template*> list;
+
+  int templates;
+
+public:
+  item_creator();
+
+  ~item_creator();
+
+  item *get_item();
+
+  inline int get_num_templates(){
+    return templates;
+  }
+
+  void print_out();
+
+};
+
+
+#endif

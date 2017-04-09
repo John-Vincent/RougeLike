@@ -1,4 +1,4 @@
-i parse the monster_desc.txt file and store the resulting data into a monster_template class, which uses a dice class to store
-any values that need to be rolled for. after parsing the monster i add the monster_template to a single linked list which is
-stored in my character_creator class. The character_creator has an unfinished method that will allow me to generate an npc object
-from any of the templates.
+I print out the same dungeon as before but now with the monsters and items from the
+file's. when you walk over an item it displays the items name. When you kill or are killed
+by a monster it prints a message with that monsters name. I only display the first color that is
+listed in the files for the monsters. Also i dont use the color black i changed it to blue. 

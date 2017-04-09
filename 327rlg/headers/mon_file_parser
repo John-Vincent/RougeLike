@@ -1,44 +1,16 @@
-#ifndef FILEPARSECPP
-#define FILEPARSECPP
+#ifndef MFILEPARSECPP
+#define MFILEPARSECPP
 
 #include <string>
-#include <sstream>
+#include <vector>
 #include "character"
-
-
-class dice{
-private:
-  int base;
-  int num;
-  int sides;
-public:
-
-  dice(){}
-
-  dice(int b, int d, int s){
-    base = b;
-    num = d;
-    sides = s;
-  }
-
-  ~dice(){}
-
-  int roll(){
-    return (rand() % sides) * num + base;
-  }
-
-  std::string to_string(){
-    std::stringstream ss;
-    ss << base << '+' << num << 'd' << sides;
-    return ss.str();
-  }
-};
+#include "dice"
 
 class monster_template{
 private:
-  std::string *name;
-  std::string *desc;
-  std::string *color;
+  std::string name;
+  std::string desc;
+  int color;
   dice *speed;
   char symb;
   int ability;
@@ -46,7 +18,9 @@ private:
   dice *dam;
 public:
   monster_template(){
-    name = desc = color = NULL;
+    name = "";
+    desc = "";
+    color = 0;
     speed = hp = dam = NULL;
     symb = 0x00;
     ability = -1;
@@ -55,23 +29,13 @@ public:
   ~monster_template();
 
   int set_name(std::string n){
-    if(name)
-      delete name;
-    name = new std::string(n);
-    if(name){
-      return 0;
-    }
-    return 1;
+    name = n;
+    return 0;
   };
 
   int set_desc(std::string d){
-    if(desc)
-      delete desc;
-    desc = new std::string(d);
-    if(desc){
-      return 0;
-    }
-    return 1;
+    desc = d;
+    return 0;
   }
 
   int set_symb(char s){
@@ -80,13 +44,19 @@ public:
   }
 
   int set_color(std::string c){
-    if(color)
-      delete color;
-    color = new std::string(c);
-    if(color){
-      return 0;
+    color = 0;
+    if(c.find("RED") != std::string::npos){
+      color = RED;
+    } else if(c.find("YELLOW") != std::string::npos){
+      color = YELLOW;
+    } else if(c.find("MAGENTA") != std::string::npos){
+      color = MAGENTA;
+    } else if(c.find("CYAN") != std::string::npos){
+      color = CYAN;
+    } else if(c.find("BLUE") != std::string::npos){
+      color = BLUE;
     }
-    return 1;
+    return 0;
   }
 
   int set_speed(int b, int d, int s){
@@ -122,15 +92,15 @@ public:
   }
 
   inline const std::string get_name(){
-    return *name;
+    return name;
   }
 
   inline const std::string get_desc(){
-    return *desc;
+    return desc;
   }
 
-  inline const std::string get_color(){
-    return *color;
+  inline const int get_color(){
+    return color;
   }
 
   inline char get_symb(){
@@ -163,10 +133,12 @@ public:
   }
 
   int is_set(){
-    return (name && desc && color && speed && symb != 0x00 && ability != -1 && hp && dam);
+    return (name != "" && desc != "" && color && speed && symb != 0x00 && ability != -1 && hp && dam);
   }
 
   void print_out();
+
+  npc *generate(int gen);
 
 };
 
@@ -174,42 +146,16 @@ public:
 class character_creator{
 private:
 
-  class template_holder{
-  public:
-    template_holder(monster_template *t){
-      temp = t;
-      next = NULL;
-    }
-
-    ~template_holder(){
-      delete temp;
-    }
-
-    inline void print_out(){
-      temp->print_out();
-    }
-
-    monster_template *temp;
-    template_holder *next;
-  };
-
-  template_holder *head;
+  std::vector<monster_template*> list;
 
   int templates;
 
 public:
-  character_creator(){
-    head = NULL;
-    templates = 0;
-  }
+  character_creator();
 
   ~character_creator();
 
-  int add_template(monster_template *temp);
-
-  monster_template *get_template(int x);
-
-  int get_monster(int x, npc &n);
+  npc *get_monster(int gen);
 
   inline int get_num_templates(){
     return templates;
@@ -218,7 +164,5 @@ public:
   void print_out();
 
 };
-
-character_creator *read_character_file();
 
 #endif
