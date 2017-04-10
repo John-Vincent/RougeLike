@@ -28,7 +28,12 @@ public:
   ~dice(){}
 
   int roll(){
-    return (rand() % sides) * num + base;
+    int roll, i;
+    roll = base;
+    for(i = 0; i < num; i++){
+      roll += (rand() % sides) + 1;
+    }
+    return roll;
   }
 
   std::string to_string(){

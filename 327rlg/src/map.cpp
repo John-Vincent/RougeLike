@@ -72,31 +72,18 @@ void drawMap(uint8_t map[mapHeight][mapWidth], char map_c[mapHeight][mapWidth], 
   }
 }
 
-void place_stairs(char chars[mapHeight][mapWidth], room_t *rooms, uint8_t numRooms, int up, int down){
-  int x, y;
+void place_stairs(uint8_t downstair[2], uint8_t upstair[2], room_t *rooms, uint8_t numRooms){
   room_t *r;
 
-  if(up){
+  if(upstair){
     r = rooms + (rand() % numRooms);
-    x = rand() % r->width + r->xPos;
-    y = rand() % r->height + r->yPos;
-    while(chars[y][x] != '.' ){
-      r = rooms + (rand() % numRooms);
-      x = rand() % r->width + r->xPos;
-      y = rand() % r->height + r->yPos;
-    }
-    chars[y][x] = '<';
+    upstair[1] = rand() % r->width + r->xPos;
+    upstair[0] = rand() % r->height + r->yPos;
   }
-  if(down){
+  if(downstair){
     r = rooms + (rand() % numRooms);
-    x = rand() % r->width + r->xPos;
-    y = rand() % r->height + r->yPos;
-    while(chars[y][x] != '.' ){
-      r = rooms + (rand() % numRooms);
-      x = rand() % r->width + r->xPos;
-      y = rand() % r->height + r->yPos;
-    }
-    chars[y][x] = '>';
+    downstair[1] = rand() % r->width + r->xPos;
+    downstair[0] = rand() % r->height + r->yPos;
   }
 }
 
@@ -189,7 +176,7 @@ void printDistances(uint16_t distances[mapHeight][mapWidth], uint8_t hardness[ma
 }
 
 
-int generateMap(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][mapWidth], room_t **rooms, uint8_t *room_count, uint8_t stairs){
+int generateMap(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][mapWidth], room_t **rooms, uint8_t *room_count){
   init_map_char(map_char);
 
   //assigns hardness value to all areas in the map
@@ -208,6 +195,5 @@ int generateMap(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][
   //set the hardness of map array to 0 to create paths between rooms
   connect_rooms(map_hard, *rooms, numRooms);
   drawMap(map_hard, map_char, *rooms, numRooms);
-  place_stairs(map_char, *rooms, *room_count, stairs, 1);
   return 0;
 }

@@ -208,3 +208,15 @@ February 13, 1:30-23:00 :
     - changed character generation to make items and use the creator's
     - changed how the character to print is calculated.
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------Assignment 1.09-----------------------------------------------------------------------------------------
+
+  April 9, 12:00 - 00:30 :
+    -worked on making the two different display screens
+    -worked on displaying the curser
+    -worked on moving the curser and handling input when in the different screens
+
+  April 10, 4:00 - 23:00 :
+    -finished moving the items around the different locations
+    -finished checking user input
+    -found multiple leaks a few from previous assignments code
+----------------------------------------------------------------------------------------------------------------------------------------------------------------

@@ -18,16 +18,20 @@
 
 class Dungeon{
 private:
+  static Dungeon *d_instance;
   character_creator mc;
   item_creator ic;
+  std::string display1;
+  std::string display2;
+  std::string message;
+  pc *player;
+  uint8_t selected;
+  uint8_t mode;
 
-  Dungeon(int nummon){
-    curlev = top = new level(nummon, 0);
-  }
-
-  static Dungeon *d_instance;
+  Dungeon(int nummon);
   Dungeon &operator=(Dungeon const&);
   Dungeon(Dungeon const&);
+
 
   class level{
   public:
@@ -35,7 +39,8 @@ private:
     ~level();
     uint8_t x;
     uint8_t y;
-    uint8_t look;
+    uint8_t upstair[2];
+    uint8_t downstair[2];
     uint8_t hardness[mapHeight][mapWidth];
     uint8_t visited[mapHeight][mapWidth];
     char chars[mapHeight][mapWidth];
@@ -44,14 +49,13 @@ private:
     uint16_t distances_intel[mapHeight][mapWidth];
     character *characters[mapHeight][mapWidth];
     item *items[mapHeight][mapWidth];
-    pc *player;
     room_t *rooms;
     uint8_t numRooms;
     uint32_t num_characters;
+    int player_turn;
     level *upstairs;
     level *downstairs;
     heap *turn_order;
-    std::string message;
   };
 
   level *curlev;
@@ -66,8 +70,8 @@ public:
   static Dungeon *get_instance();
 
   inline void center_map(){
-    curlev->x = curlev->player->x;
-    curlev->y = curlev->player->y;
+    curlev->x = player->x;
+    curlev->y = player->y;
   }
 
   inline char &get_environment(int x, int y){
@@ -75,23 +79,37 @@ public:
   }
 
   inline std::string &get_message(){
-      return curlev->message;
+      return message;
   }
 
   inline heap_t *get_turns(){
     return curlev->turn_order;
   }
 
-  inline uint8_t &get_x(){
+  inline uint8_t get_x(){
     return curlev->x;
   }
 
-  inline uint8_t &get_y(){
+  inline uint8_t get_y(){
     return curlev->y;
   }
 
-  inline uint8_t &get_look(){
-    return curlev->look;
+  inline uint8_t set_x(uint8_t a){
+    curlev->x = a;
+    return a;
+  }
+
+  inline uint8_t set_y(uint8_t a){
+    curlev->y = a;
+    return a;
+  }
+
+  inline uint8_t get_mode(){
+    return mode;
+  }
+
+  inline void set_mode(uint8_t mode){
+    this->mode = mode;
   }
 
   inline uint8_t &get_hardness(int x, int y){
@@ -115,7 +133,7 @@ public:
   }
 
   int can_see_player(int x, int y){
-    return can_see(curlev->hardness, curlev->player->x, curlev->player->y, x, y);
+    return can_see(curlev->hardness, player->x, player->y, x, y);
   }
 
   inline uint32_t get_num_characters(){
@@ -156,12 +174,16 @@ public:
 
   character *get_character(int x, int y);
 
-  character *get_player(){
-    return curlev->player;
+  pc *get_player(){
+    return player;
   }
 
   item *get_item(int x, int y){
     return curlev->items[y][x];
+  }
+
+  void set_item(int x, int y, item *it){
+    curlev->items[y][x] = it;
   }
 
   void remove_item(int x, int y){
@@ -172,8 +194,35 @@ public:
 
   void set_message(std::string a);
 
+  void set_message(const char *c){
+    message = c;
+  }
+
+  inline void set_display1(std::string a){
+    display1 = a;
+  }
+
+  void set_display1(const char *c){
+    display1 = c;
+  }
+
+  inline std::string &get_display1(){
+    return display1;
+  }
+
+  inline void set_display2(std::string a){
+    display2 = a;
+  }
+  void set_display2(const char *c){
+    display2 = c;
+  }
+
+  inline std::string &get_display2(){
+    return display2;
+  }
+
   int get_life(){
-    return curlev->player->hp;
+    return player->hp;
   }
 
   void set_character(int x, int y, character *c);
@@ -186,7 +235,29 @@ public:
 
   void calculate_distances();
 
-  void fill_level();
+  void fill_level(int up);
+
+  void add_player(int up, int down);
+
+  void show_map();
+
+  void equip(int);
+
+  void unequip(int);
+
+  void drop(int);
+
+  void destroy(int);
+
+  void inventory(int);
+
+  void equipment(int);
+
+  item *get_equipment(int);
+
+  uint8_t get_selected(){
+    return selected;
+  }
 
 };
 

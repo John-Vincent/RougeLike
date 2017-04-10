@@ -11,8 +11,6 @@
 #include "map.h"
 #include "des.h"
 
-#define default_monster_num 10;
-
 #ifdef __cplusplus
   extern "C" {
 #endif

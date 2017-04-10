@@ -6,6 +6,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string>
+#include "map.h"
 #include "dice"
 #include "item"
 
@@ -21,6 +22,8 @@ class character{
     int hp;
     int color;
     int speed;
+    int def;
+    int dodge;
     int next_turn;
     unsigned int attrib;
     int x;
@@ -42,6 +45,12 @@ class character{
     std::string get_desc(){
       return desc;
     }
+
+    virtual int get_def(){
+      return def;
+    }
+
+    bool displace();
 };
 
 class npc : public character{
@@ -52,10 +61,20 @@ class npc : public character{
 };
 
 class pc : public character{
-  public:
-    pc();
-    ~pc(){}
-    int take_turn(int input);
+
+public:
+  item *bag[bag_size];
+  item *equipment[12];
+
+  pc(room_t *r, int num_rooms);
+  ~pc();
+  int take_turn(int input);
+  int equip(int);
+  int unequip(int);
+  std::string equip_name(int);
+  int get_speed();
+  int get_dam();
+  int get_def();
 };
 
 

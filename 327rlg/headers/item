@@ -1,6 +1,7 @@
 #ifndef ITEMCPP
 #define ITEMCPP
 
+#include "constants.h"
 #include <string>
 
 
@@ -8,6 +9,7 @@ class item{
 private:
   std::string name;
   std::string desc;
+  char symbol;
   int type;
   int color;
   dice dam;
@@ -32,11 +34,54 @@ public:
     speed = s;
     attr = a;
     val = v;
+    if(type & WEAPON){
+      symbol = '|';
+    }else if(type & LIGHT){
+      symbol = '_';
+    }else if(type & OFFHAND){
+      symbol = ')';
+    }else if(type & RANGED){
+      symbol = '}';
+    }else if(type & ARMOR){
+      symbol = '[';
+    }else if(type & HELMET){
+      symbol = ']';
+    }else if(type & CLOAK){
+      symbol = '(';
+    }else if(type & GLOVES){
+      symbol = '{';
+    }else if(type & BOOTS){
+      symbol = '\\';
+    }else if(type & RING){
+      symbol = '=';
+    }else if(type & AMULET){
+      symbol = '"';
+    }else if(type & SCROLL){
+      symbol = '~';
+    }else if(type & BOOK){
+      symbol = '?';
+    }else if(type & FLASK){
+      symbol = '!';
+    }else if(type & GOLD){
+      symbol = '$';
+    }else if(type & AMMUNITION){
+      symbol = '/';
+    }else if(type & FOOD){
+      symbol = ',';
+    }else if(type & WAND){
+      symbol = '-';
+    }else if(type & CONTAINER){
+      symbol = '%';
+    }
   }
   ~item(){}
 
   std::string get_name(){
     return name;
+  }
+
+  char get_symb(){
+    return symbol;
   }
 
   std::string get_desc(){
@@ -81,6 +126,53 @@ public:
 
   int get_val(){
     return val;
+  }
+
+  std::string get_str_type(){
+    std::string ans;
+    ans = "";
+    if(type & WEAPON){
+      ans += "WEAPON";
+    }
+    if(type & LIGHT){
+      ans += "LIGHT";
+    }
+    if(type & OFFHAND){
+      ans += "OFFHAND";
+    }else if(type & RANGED){
+      ans += "RANGED";
+    }else if(type & ARMOR){
+      ans += "ARMOR";
+    }else if(type & HELMET){
+      ans += "HELMET";
+    }else if(type & CLOAK){
+      ans += "CLOAK";
+    }else if(type & GLOVES){
+      ans += "GLOVES";
+    }else if(type & BOOTS){
+      ans += "BOOTS";
+    }else if(type & RING){
+      ans += "RING";
+    }else if(type & AMULET){
+      ans += "AMULET";
+    }else if(type & SCROLL){
+      ans += "SCROLL";
+    }else if(type & BOOK){
+      ans += "BOOK";
+    }else if(type & FLASK){
+      ans += "FLASK";
+    }else if(type & GOLD){
+      ans += "GOLD";
+    }else if(type & AMMUNITION){
+      ans += "AMMUNITION";
+    }else if(type & FOOD){
+      ans += "FOOD";
+    }else if(type & WAND){
+      ans += "WAND";
+    }else if(type & CONTAINER){
+      ans += "CONTAINER";
+    }
+    return ans;
   }
 };
 

@@ -2,6 +2,7 @@
 #include "../headers/path_finder.h"
 #include "../headers/dungeon"
 #include "../headers/item"
+#include <sstream>
 
 
 npc::npc(std::string name, std::string desc, int gen, int speed, dice dam, int hp, char sym, int attrib, int color){
@@ -15,9 +16,12 @@ npc::npc(std::string name, std::string desc, int gen, int speed, dice dam, int h
   this->name = name;
   this->sym = sym;
   this->desc = desc;
+  this->hp = hp;
   this->gen = gen;
+  this->dodge = 0;
   this->speed = speed;
   this->dam = dam;
+  this->def = 0;
   this->color = color;
   this->attrib = (unsigned int) attrib;
   this->next_turn = 0;
@@ -50,8 +54,9 @@ npc::npc(std::string name, std::string desc, int gen, int speed, dice dam, int h
 int npc::take_turn(int input){
   Dungeon *dungeon;
   character *c;
-  std::string str;
   item *it;
+  std::string str;
+  std::stringstream ss;
   int x, y, rando, i, j;
   uint8_t hardness;
   unsigned int dist;
@@ -62,7 +67,7 @@ int npc::take_turn(int input){
 
   x = 0;
   y = 0;
-
+  it = NULL;
   distance = dungeon->get_distance_array(this->attrib);
 
   rando = rand() & 0x1;
@@ -98,7 +103,7 @@ int npc::take_turn(int input){
         x = this->x;
       }
       if(dungeon->get_hardness(x, y)){
-        if(!(this->attrib & tunneler && x > 0 && x<mapWidth-1 && y>0 && y<mapHeight-1)){
+        if(!(this->attrib & tunneler && attrib & pass && x > 0 && x<mapWidth-1 && y>0 && y<mapHeight-1)){
           x = 0;
         }
       } else if(!(y - this->y||x - this->x) || !(!y - this->y||!x - this->x)){
@@ -107,8 +112,9 @@ int npc::take_turn(int input){
     }
   }
 
+  this->next_turn += (turnbias / this->speed);
   hardness = dungeon->get_hardness(x,y);
-  if(hardness){
+  if(hardness && !(attrib & pass)){
     if(hardness > 85){
       dungeon->get_hardness(x, y) -= 85;
       dungeon->calculate_distances();
@@ -119,16 +125,43 @@ int npc::take_turn(int input){
     dungeon->calculate_distances();
   }
 
+  dungeon->set_character(this->x, this->y, NULL);
   c = dungeon->get_character(x, y);
-  if(c && c != this){
+  if(c){
+
     if(c == dungeon->get_player()){
-      str = "you where killed by a ";
-      str += this->name;
-      dungeon->set_message(str);
-      c->attrib = 0xffffffff;
+
+      rando = (this->dam.roll() - c->get_def());
+      if(rando > 0){
+        c->hp -= rando;
+        ss << dungeon->get_display2();
+        ss << rando << " damage taken from: " << this->name << ", ";
+        str = ss.str();
+        if(str.length() < 78)
+          dungeon->set_display2(str);
+      } else{
+        ss << 0 << " damage taken from: " << this->name << ", ";
+        str = ss.str();
+        if(str.length() < 78)
+          dungeon->set_display2(str);
+      }
+      if(c->hp < 0){
+        str = "Killed by a: ";
+        str += this->name;
+        str += ", ";
+        dungeon->set_message(str);
+        dungeon->show_map();
+        c->attrib = 0xffffffff;
+      } else{
+        dungeon->set_character(this->x, this->y, this);
+        return 0;
+      }
     } else{
-      c->x = this->x;
-      c->y = this->y;
+
+      if(!c->displace() && c->hp > this->hp){
+        dungeon->set_character(this->x, this->y, this);
+        return 0;
+      }
     }
   }
 
@@ -136,8 +169,15 @@ int npc::take_turn(int input){
   if(this->attrib & dest && it){
     dungeon->remove_item(x, y);
   }
+  if(this->attrib & pickup && it){
+    this->speed += it->get_speed();
+    this->hp += it->get_hit();
+    this->dodge += it->get_dodge();
+    this->def += it->get_def();
+    this->attrib = this->attrib | it->get_attr();
+    dungeon->remove_item(x, y);
+  }
 
-  dungeon->set_character(this->x, this->y, NULL);
   this->x = x;
   this->y = y;
   dungeon->set_character(x, y, this);

@@ -47,7 +47,7 @@ int main(int argc, char const *argv[]) {
 
   }
 
-  dungeon->fill_level();
+  dungeon->fill_level(0);
 
 
  run_game();

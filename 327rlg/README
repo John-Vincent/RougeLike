@@ -1,4 +1,16 @@
-I print out the same dungeon as before but now with the monsters and items from the
-file's. when you walk over an item it displays the items name. When you kill or are killed
-by a monster it prints a message with that monsters name. I only display the first color that is
-listed in the files for the monsters. Also i dont use the color black i changed it to blue. 
+I made all of the inputs from the assignment document except for the Inspect command.
+all of my other inventory management inputs display the description so i didnt feel i
+needed to made a seperate command just for the description. From the Wear screen
+the user can equip multiple items, from the take off screen the user can unequip
+multiple items, and from the delete screen the user can delete multiple items.
+The drop screen is limited to only one item then it returns to normal COMMAND mode
+since i only allow one item on the floor in any given location. you can switch from
+any screen to any other screen at any time. The damage, defense, and view range for the
+torches are all functional.
+
+To test the combat i recommend you use time seed "-t 1491860909", in this dungeon
+you can get the aegis right next to the spawn then move through the corridor in the upper right,
+grab the torch and then in the middle of the first room you come to there is "The One Ring". After
+you get this you can move through the corridor on your left and you should run into a "Duran's Bane",
+just press space and let it try to hit you, it wont be able to do damage. Then you can remove some of the armor
+and it will be able to kill you.

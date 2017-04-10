@@ -53,11 +53,10 @@ character_creator::~character_creator(){
   }
 }
 
-//todo
 npc *character_creator::get_monster(int gen){
   int x;
   x = rand() % templates;
-  return list[x]->generate(gen);
+  return this->list[x]->generate(gen);
 }
 
 character_creator::character_creator(){
