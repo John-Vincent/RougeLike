@@ -26,7 +26,7 @@
  * @author Collin Vincent <collinvincent96@gmail.com>
  * @date   2017-02-01T20:23:07+000
  */
-int saveMap(uint8_t numRooms, room_t const *rooms, uint8_t map_hard[mapHeight][mapWidth]);
+int saveGame();
 
 /**
  * loads a map from the files
@@ -36,7 +36,7 @@ int saveMap(uint8_t numRooms, room_t const *rooms, uint8_t map_hard[mapHeight][m
  * @author Collin Vincent <collinvincent96@gmail.com>
  * @date   2017-02-01T20:26:11+000
  */
-int loadMap(room_t **rooms, uint8_t *numRooms, uint8_t map_hard[mapHeight][mapWidth]);
+int loadGame();
 
 
 #endif

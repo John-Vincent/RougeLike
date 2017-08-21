@@ -17,6 +17,8 @@ Dungeon::level::level(int nummon, int up_stairs){
 
   this->num_characters = nummon + 1;
   this->player_turn = 0;
+  this->downstairs = NULL;
+  this->upstairs = NULL;
 
   memset(this->visited, 0, sizeof (this->visited));
   memset(characters, 0, sizeof(characters));
@@ -28,11 +30,9 @@ Dungeon::level::level(int nummon, int up_stairs){
 Dungeon::level::~level(){
   unsigned int i, j;
   character *c;
-  Dungeon *dungeon = Dungeon::get_instance();
 
   c = (character *)turn_order->pop(turn_order);
   while(c){
-    if(c != dungeon->get_player())
     delete c;
     c = (character *)turn_order->pop(turn_order);
   }
@@ -50,11 +50,11 @@ Dungeon::level::~level(){
   free(this->rooms);
 }
 
-
 Dungeon::Dungeon(int nummon){
-  curlev = top = new level(nummon, 0);
-  player = new pc(curlev->rooms, curlev->numRooms);
-  mode = CONTROL;
+  this->curlev = this->top = new level(nummon, 0);
+  this->player = new pc(curlev->rooms, curlev->numRooms);
+  this->floor_num = 0;
+  this->mode = CONTROL;
 }
 
 Dungeon::~Dungeon(){
@@ -72,11 +72,16 @@ Dungeon::~Dungeon(){
   }
 }
 
-
 Dungeon *Dungeon::get_instance(int nummon){
   if(!d_instance)
     d_instance = new Dungeon(nummon);
   return d_instance;
+}
+
+void Dungeon::load_instance(FILE *f){
+  if(!d_instance){
+    d_instance = new Dungeon(f);
+  }
 }
 
 Dungeon *Dungeon::get_instance(){
@@ -90,9 +95,13 @@ int Dungeon::go_upstairs(){
 
   if(curlev->upstair[0] == y && curlev->upstair[1] == x){
     curlev->characters[y][x] = NULL;
+    this->floor_num--;
     if(curlev->upstairs){
       curlev = curlev->upstairs;
       add_player(0, 1);
+    }else{
+      std::cout << "Dungeon floor link failure" << std::endl;
+      exit(1);
     }
     return 1;
   }
@@ -107,6 +116,7 @@ int Dungeon::go_downstairs(){
 
   if(x == curlev->downstair[1] && y == curlev->downstair[0]){
     curlev->characters[y][x] = NULL;
+    this->floor_num++;
     if(!curlev->downstairs){
       curlev->downstairs = new level(curlev->num_characters, 1);
       temp = curlev;
@@ -183,8 +193,6 @@ void Dungeon::fill_level(int up){
 
   x = curlev->x = player->x;
   y = curlev->y = player->y;
-
-  (curlev->turn_order)->insert((curlev->turn_order), player);
 
   for(i = 1; i < curlev->num_characters; i++){
     n = mc.get_monster(i);

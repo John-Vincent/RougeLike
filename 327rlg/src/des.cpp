@@ -19,7 +19,6 @@ int run_game(){
   character *c;
   heap_t *h;
   char temp[100] = " ";
-  std::string str = "";
 
   h = dungeon->get_turns();
 
@@ -51,7 +50,7 @@ int run_game(){
         dungeon->set_mode(CONTROL);
         dungeon->set_message("");
         dungeon->set_display1("");
-        dungeon->set_display2(""); 
+        dungeon->set_display2("");
         dungeon->center_map();
         break;
       // Q
@@ -91,9 +90,7 @@ int run_game(){
     }
     if(dungeon->get_mode() == CONTROL && !dungeon->get_player()->is_dead() && running){
       if(!dungeon->get_player()->take_turn(input)){
-        c = (character *)h->pop(h);
-        h->insert(h, c);
-        dungeon->set_display2(str);
+        h->insert(h, dungeon->get_player());
         while(h->peek(h) != dungeon->get_player()){
           c = (character *)h->pop(h);
           if(!c->is_dead()){
@@ -103,6 +100,7 @@ int run_game(){
             delete c;
           }
         }
+        h->pop(h);
         sprintf(temp, "input = %c, player life = %d", (char)input, dungeon->get_life());
         dungeon->get_message() += temp;
       }

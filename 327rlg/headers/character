@@ -51,22 +51,27 @@ class character{
     }
 
     bool displace();
+
+    virtual void save(FILE *f) = 0;
 };
 
 class npc : public character{
   public:
     npc(std::string name, std::string desc, int gen, int speed, dice dam, int hp, char sym, int attrib, int color);
+    npc(FILE *f);
     ~npc(){}
     int take_turn(int input);
+    void save(FILE *f);
 };
 
 class pc : public character{
 
 public:
   item *bag[bag_size];
-  item *equipment[12];
+  item *equipment[equip_slots];
 
   pc(room_t *r, int num_rooms);
+  pc(FILE *f);
   ~pc();
   int take_turn(int input);
   int equip(int);
@@ -75,6 +80,7 @@ public:
   int get_speed();
   int get_dam();
   int get_def();
+  void save(FILE *f);
 };
 
 

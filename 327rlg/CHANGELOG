@@ -220,3 +220,12 @@ February 13, 1:30-23:00 :
     -finished checking user input
     -found multiple leaks a few from previous assignments code
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------Assignment 1.10---------------------------------------------------------------------------------------------
+  April 19, 11:00 - 21:20 :
+    -made save functions for the Dungeon, npc, pc, item, and Dungon::level objects
+    -made constructors that take a file pointer for the Dungeon, npc, pc, item, and Dungeon::level objects
+    -implemented the functions within the gameio.cpp file
+    -changed the normal save and load functions to call the save/constructor function for Dungeon, which will make the appropriate calls to the other save and
+          load functions when it needs to
+    -changed the order of saving and loading in the main function so that it saves after the game starts to exit and loads before the game starts
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------

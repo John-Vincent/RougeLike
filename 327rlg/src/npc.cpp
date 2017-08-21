@@ -48,9 +48,6 @@ npc::npc(std::string name, std::string desc, int gen, int speed, dice dam, int h
 
 }
 
-
-
-
 int npc::take_turn(int input){
   Dungeon *dungeon;
   character *c;

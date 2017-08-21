@@ -34,8 +34,6 @@ pc::pc(room_t *r, int num_rooms){
   pos = r->yPos;
   span = r->height;
   y = rand() % span + pos;
-
-  this->sym = '@';
 }
 
 pc::~pc(){

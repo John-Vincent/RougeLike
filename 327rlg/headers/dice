@@ -27,6 +27,18 @@ public:
 
   ~dice(){}
 
+  int get_base(){
+    return base;
+  }
+
+  int get_num(){
+    return num;
+  }
+
+  int get_sides(){
+    return sides;
+  }
+
   int roll(){
     int roll, i;
     roll = base;

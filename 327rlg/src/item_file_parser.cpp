@@ -216,7 +216,7 @@ item_creator::item_creator(){
   std::string line, arg;
   char f_path[100];
   strcpy(f_path, getenv("HOME"));
-  strcat(f_path, "/.rlg327/item_desc.txt");
+  strcat(f_path, "/.rlg327/object_desc.txt");
   std::ifstream in(f_path);
   item_template *plate;
   int invalid = 0;
@@ -227,7 +227,8 @@ item_creator::item_creator(){
   if(line != "RLG327 OBJECT DESCRIPTION 1"){
     std::cout << line << in.is_open() << std::endl;
     in.close();
-    throw "file not found";
+    std::cout << "Cant find file: " << f_path << std::endl;
+    throw "can't find file";
   }
 
   plate = new item_template();

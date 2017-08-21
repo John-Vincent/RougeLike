@@ -21,6 +21,7 @@ private:
   int attr;
   int val;
 public:
+  item(FILE *f);
   item(std::string n, std::string d, int t, int c, int h, dice da, int dod, int def, int we, int s, int a, int v){
     name = n;
     desc = d;
@@ -127,6 +128,8 @@ public:
   int get_val(){
     return val;
   }
+
+  void save(FILE *f);
 
   std::string get_str_type(){
     std::string ans;

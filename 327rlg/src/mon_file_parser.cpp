@@ -73,8 +73,10 @@ character_creator::character_creator(){
 
   std::getline(in, line);
 
-  if(line != "RLG327 MONSTER DESCRIPTION 1")
+  if(line != "RLG327 MONSTER DESCRIPTION 1"){
+    std::cout << "can't find file: " << f_path << std::endl;
     throw "wrong file";
+  }
 
   while(std::getline(in, line)){
     if(line == "BEGIN MONSTER"){

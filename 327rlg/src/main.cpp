@@ -21,38 +21,28 @@ int main(int argc, char const *argv[]) {
   //initalize random number generator and map matrix
   initRandom(seed);
 
+  if(mode == GENERATE || mode == SAVE){
 
-  dungeon = Dungeon::get_instance(nummon);
+    dungeon = Dungeon::get_instance(nummon);
+    dungeon->fill_level(0);
 
-  if(mode == GENERATE){
+  } else if(mode == LOAD || mode == LOAD_SAVE){
 
-
-  } else if(mode == SAVE){
-
-    if(dungeon->save()){
-      return -1;
-    }
-
-  } else if(mode == LOAD){
-
-    if(dungeon->load()){
-      return -1;
-    }
-
-  } else if(mode == LOAD_SAVE){
-
-    if(dungeon->load() || dungeon->save()){
+    if(loadGame()){
       return -1;
     }
 
   }
 
-  dungeon->fill_level(0);
-
-
  run_game();
 
- delete dungeon;
+ if(mode == SAVE || mode == LOAD_SAVE){
+   if(saveGame()){
+     return -1;
+   }
+ }
+
+ delete (Dungeon::get_instance());
 
  return 0;
 }

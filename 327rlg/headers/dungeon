@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <iostream>
 #include <vector>
+#include <string>
 #include "../headers/mon_file_parser"
 #include "../headers/item_file_parser"
 #include "constants.h"
@@ -26,17 +27,21 @@ private:
   std::string message;
   pc *player;
   uint8_t selected;
+  uint8_t floor_num;
   uint8_t mode;
 
   Dungeon(int nummon);
+  Dungeon(FILE *f);
   Dungeon &operator=(Dungeon const&);
   Dungeon(Dungeon const&);
 
 
   class level{
   public:
+    level(FILE *f);
     level(int nummon, int up_stairs);
     ~level();
+    void save(FILE *f, character *p);
     uint8_t x;
     uint8_t y;
     uint8_t upstair[2];
@@ -64,6 +69,8 @@ private:
 public:
 
   ~Dungeon();
+
+  static void load_instance(FILE *f);
 
   static Dungeon *get_instance(int nummon);
 
@@ -102,6 +109,10 @@ public:
   inline uint8_t set_y(uint8_t a){
     curlev->y = a;
     return a;
+  }
+
+  Dungeon::level *get_top(){
+    return this->top;
   }
 
   inline uint8_t get_mode(){
@@ -151,24 +162,7 @@ public:
     return curlev->numRooms;
   }
 
-  int save(){
-    if(saveMap(curlev->numRooms, curlev->rooms, curlev->hardness)){
-      printf("failed to save map\n");
-      return -1;
-    }
-    std::cout << "map saved" << std::endl;
-    return 0;
-  }
-
-  int load(){
-    if(loadMap(&curlev->rooms, &curlev->numRooms,  curlev->hardness)){
-      return -1;
-    }
-
-    init_map_char(curlev->chars);
-    drawMap(curlev->hardness, curlev->chars, curlev->rooms, curlev->numRooms);
-    return 0;
-  }
+  void save(FILE *f);
 
   char for_print(int x, int y);
 
@@ -257,6 +251,10 @@ public:
 
   uint8_t get_selected(){
     return selected;
+  }
+
+  uint8_t get_floor(){
+    return this->floor_num;
   }
 
 };
