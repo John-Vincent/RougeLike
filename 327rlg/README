@@ -1,6 +1,0 @@
-I made the game save the current state include equipment, bag items, and floor states.
-it saves the game state to the same location as the previous save assignment, "~/.rlg327/dungeon".
-it uses the same commands as the last save/load assignment with --save and --load being the
-command line arguments to tell the program if you want to save your game when you exit and if you want to
-load the currently saved game when you close. since you have to commit to saving/loading when you launch
-it prevents "save scumming" on the part of the player. 
