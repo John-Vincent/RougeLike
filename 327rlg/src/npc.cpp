@@ -166,7 +166,7 @@ int npc::take_turn(int input){
   }
 
   it = dungeon->get_item(x, y);
-  if(this->attrib & dest && it){
+  if(this->attrib & DEST && it){
     dungeon->remove_item(x, y);
   }
   if(this->attrib & pickup && it){

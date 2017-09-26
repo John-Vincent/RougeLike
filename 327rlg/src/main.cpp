@@ -50,11 +50,11 @@ int main(int argc, char const *argv[]) {
   dungeon->fill_level(0);
 
 
- run_game();
+  run_game();
 
- delete dungeon;
+  delete dungeon;
 
- return 0;
+  return 0;
 }
 
 

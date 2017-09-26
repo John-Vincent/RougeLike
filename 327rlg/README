@@ -1,16 +1,22 @@
-I made all of the inputs from the assignment document except for the Inspect command.
-all of my other inventory management inputs display the description so i didnt feel i
-needed to made a seperate command just for the description. From the Wear screen
-the user can equip multiple items, from the take off screen the user can unequip
-multiple items, and from the delete screen the user can delete multiple items.
-The drop screen is limited to only one item then it returns to normal COMMAND mode
-since i only allow one item on the floor in any given location. you can switch from
-any screen to any other screen at any time. The damage, defense, and view range for the
-torches are all functional.
+currently this project is broken. It worked with previous versions of gcc but now for
+some reason the constructor for character_creator breaks at the end of the function call.
+the output from stepping through the end of the function in gdb is the following,
 
-To test the combat i recommend you use time seed "-t 1491860909", in this dungeon
-you can get the aegis right next to the spawn then move through the corridor in the upper right,
-grab the torch and then in the middle of the first room you come to there is "The One Ring". After
-you get this you can move through the corridor on your left and you should run into a "Duran's Bane",
-just press space and let it try to hit you, it wont be able to do damage. Then you can remove some of the armor
-and it will be able to kill you.
+Breakpoint 1, character_creator::character_creator (this=0x555555780280)
+    at src/mon_file_parser.cpp:176
+176	  in.close();
+(gdb) next
+68	  std::ifstream in(f_path);
+(gdb) next
+64	  std::string line, arg;
+(gdb) next
+178	}
+(gdb) next
+0
+terminate called after throwing an instance of 'char const*'
+0x00007ffff7873d77 in __gnu_cxx::__verbose_terminate_handler ()
+    at /build/gcc/src/gcc/libstdc++-v3/libsupc++/vterminate.cc:95
+95	/build/gcc/src/gcc/libstdc++-v3/libsupc++/vterminate.cc: No such file or directory.
+
+
+any help solving this problem would be much appreciated.

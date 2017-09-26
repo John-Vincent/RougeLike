@@ -5,6 +5,7 @@
 #include <iostream>
 
 
+
 void monster_template::set_ability(std::string a){
   ability = 0;
   if(a.find("SMART") != std::string::npos){
@@ -26,7 +27,7 @@ void monster_template::set_ability(std::string a){
     ability = ability | pickup;
   }
   if(a.find("DESTROY") != std::string::npos){
-    ability = ability | dest;
+    ability = ability | DEST;
   }
 }
 
@@ -73,9 +74,10 @@ character_creator::character_creator(){
 
   std::getline(in, line);
 
-  if(line != "RLG327 MONSTER DESCRIPTION 1")
-    throw "wrong file";
-
+  if(line != "RLG327 MONSTER DESCRIPTION 1"){
+    std::cout << "wrong file" << std::endl;
+    exit(-1);
+  }
   while(std::getline(in, line)){
     if(line == "BEGIN MONSTER"){
       while(std::getline(in, line) && line != "END" && !invalid){
@@ -194,8 +196,8 @@ void monster_template::print_out(){
     std::cout << "Non-Corporeal ";
   if(ability & pickup)
     std::cout << "Item-using ";
-  if(ability & dest)
-    std::cout << "Item-destroying ";
+  if(ability & DEST)
+    std::cout << "Item-DESTroying ";
   std::cout << std::endl;
   std::cout << "HP: " << hp->to_string() << std::endl;
   std::cout << "Damage: " << dam->to_string() << std::endl << std::endl;

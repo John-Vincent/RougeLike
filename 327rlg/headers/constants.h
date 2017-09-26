@@ -16,7 +16,7 @@
 #define Room_Height_Range 15
 #define Room_Number_Range 10
 
-#define default_monster_num 4;
+#define default_monster_num 4
 
 #define turnbias 1000
 
@@ -28,7 +28,7 @@
 #define erratic     0x8
 #define pass        0x10
 #define pickup      0x20
-#define dest        0x40
+#define DEST        0x40
 
 #define WEAPON     0x1
 #define OFFHAND    0x2
