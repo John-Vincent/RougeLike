@@ -27,7 +27,7 @@ void monster_template::set_ability(std::string a){
     ability = ability | pickup;
   }
   if(a.find("DESTROY") != std::string::npos){
-    ability = ability | dest;
+    ability = ability | DEST;
   }
 }
 
@@ -212,7 +212,7 @@ void monster_template::print_out(){
     std::cout << "Non-Corporeal ";
   if(ability & pickup)
     std::cout << "Item-using ";
-  if(ability & dest)
+  if(ability & DEST)
     std::cout << "Item-destroying ";
   std::cout << std::endl;
   std::cout << "HP: " << hp->to_string() << std::endl;
