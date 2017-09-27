@@ -77,7 +77,7 @@ character_creator::character_creator(){
        printf("Current working dir: %s\n", c_path);
    else
        perror("getcwd() error");
-    strcat(c_path, "/object_desc.txt");
+    strcat(c_path, "/monster_desc.txt");
     in.open(c_path);
     if(!in.is_open()){
       std::cout << "could not find file: " << h_path << " or file: " << c_path << std::endl;
