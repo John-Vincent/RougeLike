@@ -23,8 +23,13 @@ int main(int argc, char const *argv[]) {
 
   if(mode == GENERATE || mode == SAVE){
 
-    dungeon = Dungeon::get_instance(nummon);
-    dungeon->fill_level(0);
+    try{
+      dungeon = Dungeon::get_instance(nummon);
+      dungeon->fill_level(0);
+    }catch(char const* c){
+      std::cout << c << std::endl;
+      exit(-1);
+    }
 
   } else if(mode == LOAD || mode == LOAD_SAVE){
 
