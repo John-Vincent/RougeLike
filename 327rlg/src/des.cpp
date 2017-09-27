@@ -141,7 +141,7 @@ void display(){
   item *it;
   dungeon = Dungeon::get_instance();
 
-  clear();
+  erase();
 
   x = dungeon->get_x();
   y = dungeon->get_y();
@@ -182,7 +182,9 @@ void display(){
     for(j = 1; j< screen_height + 1; j++){
       for(i = 0; i< screen_width; i++){
         symbol = dungeon->for_print(x+i, y+j);
-        mvprintw(j, i, "%c", symbol);
+        if(mvprintw(j, i, "%c", symbol)){
+          i--;
+        }
       }
     }
   } else{
