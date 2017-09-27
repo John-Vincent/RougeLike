@@ -44,7 +44,7 @@ int main(int argc, char const *argv[]) {
 
  delete (Dungeon::get_instance());
 
- return 0;
+  return 0;
 }
 
 
