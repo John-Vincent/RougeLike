@@ -213,11 +213,7 @@ void monster_template::print_out(){
   if(ability & pickup)
     std::cout << "Item-using ";
   if(ability & DEST)
-<<<<<<< HEAD
-    std::cout << "Item-DESTroying ";
-=======
     std::cout << "Item-destroying ";
->>>>>>> f64f4f0444d56364a97f18c3ddb1884670d11710
   std::cout << std::endl;
   std::cout << "HP: " << hp->to_string() << std::endl;
   std::cout << "Damage: " << dam->to_string() << std::endl << std::endl;
