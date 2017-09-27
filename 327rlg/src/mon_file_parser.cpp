@@ -1,5 +1,6 @@
 #include "../headers/mon_file_parser"
 #include <cstring>
+#include <unistd.h>
 #include <fstream>
 #include <cstdio>
 #include <iostream>
@@ -61,12 +62,27 @@ npc *character_creator::get_monster(int gen){
 
 character_creator::character_creator(){
   std::string line, arg;
-  char f_path[100];
-  strcpy(f_path, getenv("HOME"));
-  strcat(f_path, "/.rlg327/monster_desc.txt");
-  std::ifstream in(f_path);
   monster_template *temp;
   int invalid, n, sy, c, de, sp, da, h, a, v1, v2, v3;
+  char h_path[200];
+  char c_path[200];
+
+  strcpy(h_path, getenv("HOME"));
+  strcat(h_path, "/.rlg327/monster_desc.txt");
+  std::ifstream in(h_path);
+
+  if(!in.is_open()){
+    if (getcwd(c_path, sizeof(c_path)) != NULL)
+       printf("Current working dir: %s\n", c_path);
+   else
+       perror("getcwd() error");
+    strcat(c_path, "/object_desc.txt");
+    in.open(c_path);
+    if(!in.is_open()){
+      std::cout << "could not find file: " << h_path << " or file: " << c_path << std::endl;
+      exit(-1);
+    }
+  }
 
   temp = new monster_template();
   invalid = n = sy = c = de = sp = da = h = a = 0;
@@ -74,8 +90,8 @@ character_creator::character_creator(){
   std::getline(in, line);
 
   if(line != "RLG327 MONSTER DESCRIPTION 1"){
-    std::cout << "can't find file: " << f_path << std::endl;
-    exit(-1);
+    std::cout << "invalid file header: " << line << std::endl;
+    throw "broken monster file";
   }
 
   while(std::getline(in, line)){

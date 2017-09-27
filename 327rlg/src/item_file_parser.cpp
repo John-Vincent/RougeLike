@@ -1,6 +1,8 @@
 #include "../headers/item_file_parser"
 #include "../headers/constants.h"
 #include <cstring>
+#include <errno.h>
+#include <unistd.h>
 #include <fstream>
 #include <cstdio>
 #include <iostream>
@@ -214,21 +216,36 @@ void item_template::print_out(){
 
 item_creator::item_creator(){
   std::string line, arg;
-  char f_path[100];
-  strcpy(f_path, getenv("HOME"));
-  strcat(f_path, "/.rlg327/object_desc.txt");
-  std::ifstream in(f_path);
   item_template *plate;
   int invalid = 0;
   templates = 0;
+  char h_path[200];
+  char c_path[200];
+
+  strcpy(h_path, getenv("HOME"));
+  strcat(h_path, "/.rlg327/object_desc.txt");
+  std::ifstream in(h_path);
+
+  if(!in.is_open()){
+    if (getcwd(c_path, sizeof(c_path)) != NULL)
+       printf("Current working dir: %s\n", c_path);
+   else
+       perror("getcwd() error");
+    strcat(c_path, "/object_desc.txt");
+    in.open(c_path);
+    if(!in.is_open()){
+      std::cout << "could not find file: " << h_path << " or file: " << c_path << std::endl;
+      exit(-1);
+    }
+  }
 
   std::getline(in, line);
 
   if(line != "RLG327 OBJECT DESCRIPTION 1"){
     std::cout << line << in.is_open() << std::endl;
     in.close();
-    std::cout << "Cant find file: " << f_path << std::endl;
-    throw "can't find file";
+    std::cout << "invalid file header " << line << std::endl;
+    throw "broken object file";
   }
 
   plate = new item_template();
