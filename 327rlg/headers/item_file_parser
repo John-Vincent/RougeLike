@@ -2,6 +2,7 @@
 #define IFILEPARSECPP
 
 #include <string>
+#include <stdlib.h>
 #include <sstream>
 #include <vector>
 #include "dice"
