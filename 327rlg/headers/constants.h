@@ -16,7 +16,7 @@
 #define Room_Height_Range 15
 #define Room_Number_Range 10
 
-#define default_monster_num 4;
+#define default_monster_num 4
 
 #define turnbias 1000
 
