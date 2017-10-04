@@ -11,6 +11,8 @@
 #include "../headers/path_finder.h"
 #include "../headers/character"
 
+char* get_screen();
+
 
 int run_game(){
 
@@ -284,4 +286,22 @@ void display(){
   dungeon->get_message() = "";
   dungeon->get_display1() = "";
   dungeon->get_display2() = "";
+}
+
+char *get_screen(){
+  char *screen;
+  int i=0,j=0;
+  screen = (char*)malloc((screen_width+1)*screen_height*sizeof(char));
+
+  for(i = 0; i<screen_height; i++){
+    for(j = 0; j<screen_width; j++){
+      screen[j + screen_width*i] = (char)(mvinch(i,j) & 0x000000ff);
+    }
+    if(screen_height == i-1){
+      screen[j + screen_width*i] = '\0';
+    }else{
+      screen[j + screen_width*i] = '\n';
+    }
+  }
+  return screen;
 }

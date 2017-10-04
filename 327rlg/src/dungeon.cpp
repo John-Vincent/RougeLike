@@ -6,6 +6,11 @@ Dungeon *Dungeon::d_instance = NULL;
 
 Dungeon::level::level(int nummon, int up_stairs){
 
+  downstair[0] = downstair[1] = upstair[0] = upstair[1] = 0;
+  memset(this->distances, 0, mapWidth*mapHeight*sizeof(**(this->distances)));
+  memset(this->distances_intel, 0, mapWidth*mapHeight*sizeof(**(this->distances_intel)));
+  memset(this->distances_notun, 0, mapWidth*mapHeight*sizeof(**(this->distances_notun)));
+
   if(generateMap(this->hardness, this->chars, &(this->rooms), &(this->numRooms))){
     printf("error making new map");
   }
@@ -93,7 +98,7 @@ int Dungeon::go_upstairs(){
   x = player->x;
   y = player->y;
 
-  if(curlev->upstair[0] == y && curlev->upstair[1] == x){
+  if(curlev->upstair[0] == y && curlev->upstair[1] == x && (curlev->upstair[0] != 0 || curlev->upstair[1] != 0)){
     curlev->characters[y][x] = NULL;
     this->floor_num--;
     if(curlev->upstairs){
@@ -114,7 +119,7 @@ int Dungeon::go_downstairs(){
   x = player->x;
   y = player->y;
 
-  if(x == curlev->downstair[1] && y == curlev->downstair[0]){
+  if(x == curlev->downstair[1] && y == curlev->downstair[0] && (curlev->downstair[1] != 0 || curlev->downstair[0] != 0)){
     curlev->characters[y][x] = NULL;
     this->floor_num++;
     if(!curlev->downstairs){
@@ -228,10 +233,10 @@ char Dungeon::for_print(int x, int y){
     symbol = curlev->items[y][x]->get_symb();
     color = curlev->items[y][x]->get_color();
   } else{
-    if(x == curlev->upstair[1] && y == curlev->upstair[0]){
+    if(x == curlev->upstair[1] && y == curlev->upstair[0] && (curlev->upstair[0] != 0 || curlev->upstair[1] != 0)){
       color = GREEN;
       symbol = '<';
-    }else if(x == curlev->downstair[1] && y == curlev->downstair[0]){
+    }else if(x == curlev->downstair[1] && y == curlev->downstair[0] && (curlev->downstair[1] != 0 || curlev->downstair[0] != 0)){
       color = GREEN;
       symbol = '>';
     }else if(mode & LOOK && x == curlev->x && y == curlev->y){

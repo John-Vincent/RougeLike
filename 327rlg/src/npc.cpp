@@ -9,6 +9,8 @@ npc::npc(std::string name, std::string desc, int gen, int speed, dice dam, int h
   Dungeon *dungeon;
   room_t* r;
   int a, x, y, flag;
+  x = 0;
+  y = 0;
 
   dungeon = Dungeon::get_instance();
   r = dungeon->get_room(0);
@@ -63,6 +65,8 @@ int npc::take_turn(int input){
   dungeon = Dungeon::get_instance();
 
   x = 0;
+  i = 0;
+  j = 0;
   y = 0;
   it = NULL;
   distance = dungeon->get_distance_array(this->attrib);

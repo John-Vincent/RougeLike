@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "../headers/map.h"
 #include "../headers/path_finder.h"
 
@@ -177,15 +178,19 @@ void printDistances(uint16_t distances[mapHeight][mapWidth], uint8_t hardness[ma
 
 
 int generateMap(uint8_t map_hard[mapHeight][mapWidth], char map_char[mapHeight][mapWidth], room_t **rooms, uint8_t *room_count){
-  init_map_char(map_char);
 
+  //prevent valgrind errors
+  memset(map_hard, mapHeight*mapWidth, sizeof(**map_hard));
+
+  //assigne characters
+  init_map_char(map_char);
   //assigns hardness value to all areas in the map
   generateHardness(map_hard);
 
   //generates all the rooms
   *room_count = rand()% Room_Number_Range + Room_Min_Number;
   int numRooms = *room_count;
-  if(!(*rooms =(room_t *) malloc((sizeof (**rooms)) * numRooms))){
+  if(!(*rooms =(room_t *) calloc( numRooms, sizeof (**rooms)))){
       return -1;
   }
   if(generateRooms(*rooms, numRooms)){

@@ -57,12 +57,13 @@ character_creator::~character_creator(){
 
 npc *character_creator::get_monster(int gen){
   int x;
-  x = rand() % templates;
+  x = rand() % this->templates;
   return this->list[x]->generate(gen);
 }
 
 character_creator::character_creator(){
   std::string line, arg;
+  this->templates = 0;
   monster_template *temp;
   int invalid, n, sy, c, de, sp, da, h, a, v1, v2, v3;
   char h_path[200];
@@ -182,7 +183,7 @@ character_creator::character_creator(){
       }
       if(!invalid && temp->is_set()){
         list.push_back(temp);
-        templates++;
+        this->templates++;
         temp = new monster_template();
       }
       invalid = n = sy = c = de = sp = da = h = a = 0;
